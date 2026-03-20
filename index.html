@@ -1,0 +1,1697 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IT Help Desk</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg0:#ffffff;--bg1:#f7f7f6;--bg2:#f0efeb;--bg3:#e8e7e2;
+  --bgi:#e8f2fd;--bgs:#e8f5ec;--bgw:#fdf3e3;--bgd:#fdeaea;
+  --t0:#111110;--t1:#5c5c58;--t2:#9c9c96;
+  --ti:#0a3d6b;--ts:#1a4d0a;--tw:#5c3a00;--td:#6b1a1a;
+  --acc:#1a6ef5;--acc2:#0d4db3;
+  --b:rgba(0,0,0,0.08);--b2:rgba(0,0,0,0.16);
+  --bi:rgba(10,61,107,0.25);--bs:rgba(26,77,10,0.25);--bd:rgba(107,26,26,0.25);
+  --rm:8px;--rl:14px;--rxl:20px;
+  --font:'DM Sans',sans-serif;--mono:'DM Mono',monospace;
+  --shadow:0 1px 3px rgba(0,0,0,0.08),0 4px 12px rgba(0,0,0,0.05);
+}
+.dark{
+  --bg0:#161615;--bg1:#1e1e1d;--bg2:#252524;--bg3:#2e2e2c;
+  --bgi:#0c1e35;--bgs:#0c1f0d;--bgw:#261a05;--bgd:#261010;
+  --t0:#eeeee8;--t1:#9c9c96;--t2:#5c5c58;
+  --ti:#7eb8f5;--ts:#7dca6a;--tw:#f0b855;--td:#f07a7a;
+  --acc:#3d82f7;--acc2:#5a9bff;
+  --b:rgba(255,255,255,0.08);--b2:rgba(255,255,255,0.14);
+  --shadow:0 1px 3px rgba(0,0,0,0.3),0 4px 12px rgba(0,0,0,0.2);
+}
+html,body{height:100%;overflow:hidden}
+body{font-family:var(--font);font-size:14px;background:var(--bg2);color:var(--t0);transition:background .3s,color .3s;line-height:1.5}
+
+/* ── PAGES ─────────────────────────────────────────── */
+.page{display:none;position:fixed;inset:0;overflow-y:auto}.page.active{display:block}.subpage{display:none}.subpage.active{display:block}
+
+/* ── LOGIN ─────────────────────────────────────────── */
+#pg-login{background:var(--bg2);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:2rem}
+.login-card{background:var(--bg0);border:0.5px solid var(--b2);border-radius:var(--rxl);padding:2.5rem 2rem;width:100%;max-width:400px;box-shadow:var(--shadow)}
+.login-logo{display:flex;align-items:center;gap:10px;margin-bottom:2rem}
+.login-logo-icon{width:36px;height:36px;background:var(--acc);border-radius:10px;display:flex;align-items:center;justify-content:center}
+.login-logo-icon svg{width:18px;height:18px;stroke:#fff;fill:none;stroke-width:2}
+.login-title{font-size:20px;font-weight:600;color:var(--t0)}
+.login-sub{font-size:13px;color:var(--t1);margin-bottom:1.75rem}
+.role-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:1.5rem}
+.role-card{border:1.5px solid var(--b2);border-radius:var(--rl);padding:1.1rem 1rem;cursor:pointer;transition:all .2s;text-align:center}
+.role-card:hover{border-color:var(--acc);background:var(--bgi)}
+.role-card.selected{border-color:var(--acc);background:var(--bgi)}
+.role-card svg{width:28px;height:28px;stroke:var(--t1);fill:none;stroke-width:1.5;margin-bottom:8px;transition:stroke .2s}
+.role-card.selected svg,.role-card:hover svg{stroke:var(--acc)}
+.role-card-title{font-size:13px;font-weight:600;color:var(--t0)}
+.role-card-sub{font-size:11px;color:var(--t1);margin-top:2px}
+.login-field{margin-bottom:1rem}
+.login-label{font-size:12px;font-weight:500;color:var(--t1);margin-bottom:5px;display:block;text-transform:uppercase;letter-spacing:.05em}
+.login-input{width:100%;padding:9px 12px;border-radius:var(--rm);border:0.5px solid var(--b2);background:var(--bg1);color:var(--t0);font-family:var(--font);font-size:13px;outline:none;transition:border-color .15s}
+.login-input:focus{border-color:var(--acc)}
+.login-btn{width:100%;padding:10px;border-radius:var(--rm);border:none;background:var(--acc);color:#fff;font-family:var(--font);font-size:14px;font-weight:600;cursor:pointer;transition:background .15s;margin-top:.5rem}
+.login-btn:hover{background:var(--acc2)}
+.login-err{font-size:12px;color:var(--td);margin-top:8px;min-height:16px;text-align:center}
+
+/* ── SHARED SHELL ───────────────────────────────────── */
+.app-shell{max-width:1160px;margin:0 auto;padding:1.5rem 1.25rem;min-height:100vh;background:var(--bg2)}
+.topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.4rem;flex-wrap:wrap;gap:10px}
+.topbar-left{display:flex;align-items:center;gap:12px}
+.app-logo{width:32px;height:32px;background:var(--acc);border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.app-logo svg{width:16px;height:16px;stroke:#fff;fill:none;stroke-width:2}
+.app-name{font-size:16px;font-weight:600;color:var(--t0)}
+.app-role{font-size:11px;color:var(--t1)}
+.topbar-right{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.user-pill{display:flex;align-items:center;gap:7px;padding:4px 10px 4px 5px;border-radius:20px;border:0.5px solid var(--b2);background:var(--bg1)}
+.user-avatar{width:22px;height:22px;border-radius:50%;background:var(--acc);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;color:#fff}
+.user-name{font-size:12px;font-weight:500;color:var(--t0)}
+.ibtn{height:30px;padding:0 12px;border-radius:var(--rm);border:0.5px solid var(--b2);background:transparent;color:var(--t0);cursor:pointer;font-family:var(--font);font-size:12px;transition:background .15s;display:flex;align-items:center;gap:5px}
+.ibtn:hover{background:var(--bg1)}
+.ibtn-prim{background:var(--acc);color:#fff;border-color:transparent;font-weight:600}
+.ibtn-prim:hover{background:var(--acc2)}
+.ibtn-freeze{border-color:var(--bi);color:var(--ti)}.ibtn-freeze:hover{background:var(--bgi)}
+.ibtn-freeze.frozen{background:var(--bgw);border-color:rgba(92,58,0,.3);color:var(--tw)}
+.ibtn-logout{color:var(--t1)}.ibtn-logout:hover{color:var(--td);background:var(--bgd)}
+.theme-btn{width:30px;height:30px;border-radius:var(--rm);border:0.5px solid var(--b2);background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.theme-btn:hover{background:var(--bg1)}
+.theme-btn svg{stroke:#e6a817;fill:none;stroke-width:2;width:14px;height:14px}
+
+/* ── METRICS ────────────────────────────────────────── */
+.metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:1.25rem}
+.metric{background:var(--bg0);border:0.5px solid var(--b);border-radius:var(--rl);padding:.875rem 1rem}
+.metric-label{font-size:11px;color:var(--t1);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px}
+.metric-val{font-size:22px;font-weight:600;color:var(--t0)}
+.metric-sub{font-size:11px;color:var(--t1);margin-top:2px}
+.metric-sub.warn{color:var(--td)}.metric-sub.good{color:var(--ts)}
+
+/* ── CARDS ──────────────────────────────────────────── */
+.card{background:var(--bg0);border:0.5px solid var(--b);border-radius:var(--rl);padding:1rem 1.15rem;margin-bottom:12px}
+.card:last-child{margin-bottom:0}
+.card-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:.875rem}
+.card-title{font-size:13px;font-weight:600;color:var(--t0)}
+
+/* ── PILLS ──────────────────────────────────────────── */
+.prio{font-size:10px;padding:2px 8px;border-radius:10px;font-weight:600}
+.p1{background:var(--bgd);color:var(--td)}.p2{background:var(--bgw);color:var(--tw)}
+.p3{background:var(--bgi);color:var(--ti)}.p4{background:var(--bg2);color:var(--t1);border:0.5px solid var(--b)}
+.spill{font-size:10px;padding:2px 8px;border-radius:10px;font-weight:600}
+.s-open{background:var(--bgi);color:var(--ti)}.s-prog{background:var(--bgw);color:var(--tw)}
+.s-esc{background:var(--bgd);color:var(--td)}.s-res{background:var(--bgs);color:var(--ts)}
+
+/* ── FORM ELEMENTS ──────────────────────────────────── */
+input[type=text],input[type=search],input[type=email],select,textarea{
+  font-size:13px;padding:7px 10px;border-radius:var(--rm);border:0.5px solid var(--b2);
+  background:var(--bg1);color:var(--t0);font-family:var(--font);outline:none;
+  transition:border-color .15s;width:100%
+}
+input[type=search]{padding-left:30px}
+input:focus,select:focus,textarea:focus{border-color:var(--acc)}
+textarea{resize:none;line-height:1.5}
+.field-label{font-size:11px;font-weight:500;color:var(--t1);text-transform:uppercase;letter-spacing:.05em;margin-bottom:5px;margin-top:14px}
+.field-label:first-child{margin-top:0}
+.field-req{color:var(--td);margin-left:2px}
+.val-msg{font-size:11px;color:var(--td);margin-top:3px;min-height:14px}
+.save-msg{font-size:11px;color:var(--ts);margin-top:6px;text-align:center;min-height:14px}
+.char-count{font-size:11px;color:var(--t2);text-align:right;margin-top:2px}
+
+/* ── TICKETS ────────────────────────────────────────── */
+.tkt-list{display:flex;flex-direction:column;gap:7px}
+.tkt{background:var(--bg1);border-radius:var(--rm);padding:10px 12px;cursor:pointer;border:0.5px solid transparent;transition:border-color .15s,background .3s}
+.tkt:hover{border-color:var(--b2)}.tkt.flash{border-color:var(--bi);background:var(--bgi)}
+.tkt-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:3px}
+.tkt-id{font-size:11px;color:var(--t2);font-family:var(--mono)}
+.tkt-desc{font-size:13px;color:var(--t0);margin-bottom:4px;line-height:1.4}
+.tkt-meta{display:flex;align-items:center;justify-content:space-between}
+.tkt-cat{font-size:11px;color:var(--t1)}
+.empty-state{font-size:13px;color:var(--t1);padding:20px 0;text-align:center}
+
+/* ── SEARCH ROW ─────────────────────────────────────── */
+.search-row{display:flex;align-items:center;gap:8px;margin-bottom:.875rem;flex-wrap:wrap}
+.search-wrap{flex:1;min-width:150px;position:relative}
+.search-wrap svg{position:absolute;left:9px;top:50%;transform:translateY(-50%);width:13px;height:13px;stroke:var(--t2);fill:none;stroke-width:2;pointer-events:none}
+.filter-row{display:flex;gap:5px;flex-wrap:wrap}
+.fbtn{font-size:11px;padding:3px 10px;border-radius:20px;border:0.5px solid var(--b2);background:transparent;color:var(--t1);cursor:pointer;font-family:var(--font);transition:all .15s}
+.fbtn.active{background:var(--bgi);color:var(--ti);border-color:transparent}
+
+/* ── CAT BARS ───────────────────────────────────────── */
+.cat-list{display:flex;flex-direction:column;gap:9px}
+.cat-row{display:flex;flex-direction:column;gap:4px}
+.cat-top{display:flex;align-items:center;justify-content:space-between}
+.cat-name{font-size:13px;color:var(--t0);display:flex;align-items:center;gap:7px}
+.dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.bar-bg{height:4px;background:var(--bg2);border-radius:3px}
+.bar-fill{height:4px;border-radius:3px;transition:width .5s}
+
+/* ── FEED ───────────────────────────────────────────── */
+.feed-box{display:flex;flex-direction:column;gap:5px;max-height:155px;overflow-y:auto}
+.feed-item{font-size:12px;color:var(--t1);padding:5px 8px;background:var(--bg1);border-left:2px solid var(--acc);line-height:1.4}
+.feed-item.f-esc{border-left-color:#E24B4A}.feed-item.f-res{border-left-color:#1D9E75}.feed-item.f-freeze{border-left-color:#BA7517}
+
+/* ── STEPS ──────────────────────────────────────────── */
+
+
+.ai-loading{display:flex;align-items:center;gap:9px;font-size:13px;color:var(--t1);padding:14px 0}
+.ai-spinner{width:13px;height:13px;border:2px solid var(--b2);border-top-color:var(--acc);border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ── FROZEN BANNER ──────────────────────────────────── */
+.frozen-banner{display:none;background:var(--bgw);border:0.5px solid rgba(92,58,0,.22);border-radius:var(--rm);padding:7px 12px;margin-bottom:.875rem;font-size:12px;color:var(--tw);align-items:center;gap:8px}
+.frozen-banner.on{display:flex}
+.queued-badge{font-size:10px;padding:2px 8px;border-radius:10px;background:var(--bgw);color:var(--tw);font-weight:600;margin-left:auto;border:0.5px solid rgba(92,58,0,.2)}
+
+/* ── FORM GRID ──────────────────────────────────────── */
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.form-full{grid-column:1/-1}
+.section-title{font-size:11px;font-weight:600;color:var(--t1);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.75rem;padding-bottom:6px;border-bottom:0.5px solid var(--b)}
+
+/* ── STATUS TIMELINE (User view) ────────────────────── */
+.timeline{display:flex;flex-direction:column;gap:0}
+.tl-item{display:flex;gap:12px;padding-bottom:16px;position:relative}
+.tl-item:last-child{padding-bottom:0}
+.tl-dot{width:10px;height:10px;border-radius:50%;background:var(--b2);flex-shrink:0;margin-top:4px;z-index:1}
+.tl-dot.active{background:var(--acc)}.tl-dot.done{background:#1D9E75}
+.tl-line{position:absolute;left:4px;top:14px;bottom:0;width:1px;background:var(--b2)}
+.tl-item:last-child .tl-line{display:none}
+.tl-label{font-size:13px;font-weight:500;color:var(--t0)}
+.tl-sub{font-size:11px;color:var(--t1)}
+
+/* ── FEEDBACK STARS ─────────────────────────────────── */
+.star-row{display:flex;gap:4px;margin:.5rem 0}
+.star{font-size:22px;cursor:pointer;color:var(--b2);transition:color .1s;line-height:1}
+.star.lit{color:#f0a500}
+
+/* ── KB ARTICLES ────────────────────────────────────── */
+.kb-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px}
+.kb-card{background:var(--bg1);border:0.5px solid var(--b);border-radius:var(--rm);padding:12px;cursor:pointer;transition:border-color .15s}
+.kb-card:hover{border-color:var(--acc)}
+.kb-tag{font-size:10px;font-weight:600;color:var(--ti);background:var(--bgi);padding:2px 7px;border-radius:8px;display:inline-block;margin-bottom:6px}
+.kb-card-title{font-size:13px;font-weight:500;color:var(--t0);line-height:1.4}
+.kb-card-sub{font-size:11px;color:var(--t1);margin-top:3px}
+
+/* ── CHATBOT ────────────────────────────────────────── */
+@keyframes bounce{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-5px)}}
+.chat-context{display:flex;flex-direction:column;gap:8px}
+.ctx-section{font-size:11px;font-weight:600;color:var(--t1);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px}
+.tier-card{border-radius:var(--rm);padding:10px 12px;border:0.5px solid var(--b);margin-bottom:6px}
+.tier-card:last-child{margin-bottom:0}
+.tier-label{font-size:11px;font-weight:600;margin-bottom:2px}
+.tier-desc{font-size:12px;color:var(--t1);line-height:1.5}
+.t1c{background:var(--bgs);border-color:var(--bs)}.t1c .tier-label{color:var(--ts)}
+.t2c{background:var(--bgw);border-color:rgba(92,58,0,.2)}.t2c .tier-label{color:var(--tw)}
+.t3c{background:var(--bgd);border-color:var(--bd)}.t3c .tier-label{color:var(--td)}
+
+/* ── MAIN GRIDS ─────────────────────────────────────── */
+/* ── LIVE CHAT ──────────────────────────────────────── */
+.lc-window{display:flex;flex-direction:column;height:340px}
+.lc-msgs{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:8px;padding:4px 0;margin-bottom:8px}
+.lc-bubble{max-width:80%;padding:8px 11px;border-radius:12px;font-size:13px;line-height:1.5}
+.lc-bubble.admin{background:var(--acc);color:#fff;border-bottom-right-radius:3px;align-self:flex-end}
+.lc-bubble.user-msg{background:var(--bg2);color:var(--t0);border-bottom-left-radius:3px;align-self:flex-start;border:0.5px solid var(--b)}
+.lc-bubble .lc-ts{font-size:10px;opacity:.6;margin-top:3px;display:block}
+.lc-bubble.admin .lc-ts{text-align:right}
+.lc-bubble .lc-read{font-size:10px;opacity:.65;text-align:right;margin-top:1px}
+.lc-sender{font-size:10px;font-weight:600;margin-bottom:3px;color:var(--t1)}
+.lc-input-row{display:flex;gap:7px;align-items:flex-end}
+.lc-input{flex:1;padding:7px 10px;border-radius:var(--rm);border:0.5px solid var(--b2);background:var(--bg1);color:var(--t0);font-family:var(--font);font-size:13px;resize:none;outline:none;transition:border-color .15s;line-height:1.5;max-height:80px}
+.lc-input:focus{border-color:var(--acc)}
+.lc-send{width:32px;height:32px;border-radius:var(--rm);border:none;background:var(--acc);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background .15s}
+.lc-send:hover{background:var(--acc2)}
+.lc-send svg{width:13px;height:13px;stroke:#fff;fill:none;stroke-width:2}
+.lc-typing{font-size:11px;color:var(--t2);min-height:16px;margin-bottom:4px;display:flex;align-items:center;gap:5px}
+.lc-tdots{display:flex;gap:3px;align-items:center}
+.lc-tdot{width:5px;height:5px;border-radius:50%;background:var(--t2);animation:bounce .9s infinite}
+.lc-tdot:nth-child(2){animation-delay:.15s}.lc-tdot:nth-child(3){animation-delay:.3s}
+.lc-empty{font-size:13px;color:var(--t2);text-align:center;padding:24px 0}
+.lc-resolve-bar{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-top:0.5px solid var(--b);margin-top:6px;flex-wrap:wrap;gap:8px}
+/* Floating chat bubble */
+.float-chat-btn{position:fixed;bottom:24px;right:24px;width:48px;height:48px;border-radius:50%;background:var(--acc);color:#fff;border:none;cursor:pointer;display:none;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(0,0,0,0.18);z-index:1000;transition:background .15s}
+.float-chat-btn.visible{display:flex}
+.float-chat-btn:hover{background:var(--acc2)}
+.float-chat-btn svg{width:20px;height:20px;stroke:#fff;fill:none;stroke-width:2}
+.float-notif{position:absolute;top:-3px;right:-3px;width:16px;height:16px;border-radius:50%;background:#E24B4A;color:#fff;font-size:9px;font-weight:700;display:none;align-items:center;justify-content:center}
+.float-notif.on{display:flex}
+.float-panel{position:fixed;bottom:84px;right:24px;width:320px;max-height:460px;background:var(--bg0);border:0.5px solid var(--b2);border-radius:var(--rl);box-shadow:0 8px 32px rgba(0,0,0,0.14);z-index:999;display:none;flex-direction:column;overflow:hidden}
+.float-panel.open{display:flex}
+.float-header{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:0.5px solid var(--b);background:var(--bg1);flex-shrink:0}
+.float-header-info{display:flex;align-items:center;gap:8px}
+.float-online{width:7px;height:7px;border-radius:50%;background:#1D9E75;flex-shrink:0}
+.float-close{width:22px;height:22px;border-radius:var(--rm);border:none;background:transparent;cursor:pointer;color:var(--t1);display:flex;align-items:center;justify-content:center;font-size:16px;line-height:1}
+.float-close:hover{background:var(--bg2)}
+.float-body{padding:10px 12px;display:flex;flex-direction:column;flex:1;overflow:hidden}
+.float-msgs{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:7px;margin-bottom:8px;min-height:180px}
+.float-input-row{display:flex;gap:6px;align-items:center;flex-shrink:0}
+.float-input{flex:1;padding:6px 9px;border-radius:var(--rm);border:0.5px solid var(--b2);background:var(--bg1);color:var(--t0);font-family:var(--font);font-size:12px;outline:none;transition:border-color .15s}
+.float-input:focus{border-color:var(--acc)}
+/* Inbox */
+.inbox-list{display:flex;flex-direction:column;gap:4px}
+.inbox-row{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:var(--rm);cursor:pointer;transition:background .15s;border:0.5px solid transparent}
+.inbox-row:hover{background:var(--bg1)}
+.inbox-row.unread{border-color:var(--bi);background:var(--bgi)}
+.inbox-av{width:36px;height:36px;border-radius:50%;background:var(--acc);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:#fff;flex-shrink:0}
+.inbox-meta{flex:1;min-width:0}
+.inbox-name{font-size:13px;font-weight:500;color:var(--t0)}
+.inbox-preview{font-size:12px;color:var(--t1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:1px}
+.inbox-right{text-align:right;flex-shrink:0}
+.inbox-time{font-size:11px;color:var(--t2)}
+.inbox-dot{width:8px;height:8px;border-radius:50%;background:var(--acc);margin:4px 0 0 auto}
+
+.main-grid{display:grid;grid-template-columns:2fr 1fr;gap:12px}
+.detail-grid{display:grid;grid-template-columns:1.5fr 1fr;gap:12px;margin-top:12px}
+.detail-title{font-size:17px;font-weight:600;color:var(--t0);margin-bottom:5px;line-height:1.35}
+
+/* ── RESPONSIVE ─────────────────────────────────────── */
+@media(max-width:700px){.main-grid,.detail-grid,.form-grid{grid-template-columns:1fr}.metrics{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:420px){.app-shell{padding:1rem .75rem}.metrics{grid-template-columns:1fr 1fr}}
+
+/* ── ADMIN DETAIL TABS ──────────────────────────────── */
+
+@media(max-width:900px){#ad-workspace{grid-template-columns:1fr 1fr!important}}
+@media(max-width:640px){#ad-workspace{grid-template-columns:1fr!important}}
+
+/* ── TIPS SECTION ───────────────────────────────────── */
+.tips-section{margin-bottom:12px}
+.tips-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.tips-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:8px}
+.tip-card{background:var(--bg0);border:0.5px solid var(--b);border-radius:var(--rl);padding:12px 14px;border-left:3px solid var(--acc)}
+.tip-card.tip-warn{border-left-color:#BA7517}.tip-card.tip-danger{border-left-color:#D85A30}
+.tip-card.tip-success{border-left-color:#1D9E75}.tip-card.tip-info{border-left-color:#378ADD}
+.tip-label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px;display:flex;align-items:center;gap:5px}
+.tip-label.tip-warn{color:var(--tw)}.tip-label.tip-danger{color:var(--td)}
+.tip-label.tip-success{color:var(--ts)}.tip-label.tip-info{color:var(--ti)}
+.tip-title{font-size:13px;font-weight:600;color:var(--t0);margin-bottom:3px}
+.tip-body{font-size:12px;color:var(--t1);line-height:1.55}
+.tip-steps{margin-top:6px;display:flex;flex-direction:column;gap:3px}
+.tip-step{font-size:12px;color:var(--t1);display:flex;gap:6px;line-height:1.45}
+.tip-step-num{font-size:11px;font-weight:600;color:var(--acc);flex-shrink:0;min-width:14px}
+.tips-empty{font-size:13px;color:var(--t2);padding:12px 0;text-align:center}
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════
+     LOGIN PAGE
+══════════════════════════════════════════════════════ -->
+<div id="pg-login" class="page active">
+    <div class="login-card">
+      <div class="login-logo">
+        <div class="login-logo-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="8" height="8" rx="1.5"/><rect x="13" y="3" width="8" height="8" rx="1.5"/><rect x="3" y="13" width="8" height="8" rx="1.5"/><rect x="13" y="13" width="8" height="8" rx="1.5"/></svg></div>
+        <span class="login-title">IT Help Desk</span>
+      </div>
+      <div class="login-sub">Sign in to continue. Select your role to access the right portal.</div>
+      <div class="role-grid">
+        <div class="role-card selected" id="role-user" onclick="selectRole('user')">
+          <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          <div class="role-card-title">User</div>
+          <div class="role-card-sub">Submit &amp; track tickets</div>
+        </div>
+        <div class="role-card" id="role-admin" onclick="selectRole('admin')">
+          <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          <div class="role-card-title">IT Staff / Admin</div>
+          <div class="role-card-sub">Manage &amp; resolve tickets</div>
+        </div>
+      </div>
+      <div class="login-field">
+        <label class="login-label">Name</label>
+        <input class="login-input" type="text" id="login-name" placeholder="e.g. Jordan Smith" value="Jordan Smith">
+      </div>
+      <div class="login-field" id="dept-field">
+        <label class="login-label">Department</label>
+        <select class="login-input" id="login-dept">
+          <option>Marketing</option><option>Engineering</option><option>Finance</option>
+          <option>HR</option><option>Operations</option><option>Sales</option>
+        </select>
+      </div>
+
+      <button class="login-btn" onclick="doLogin()">Sign in</button>
+      <div class="login-err" id="login-err"></div>
+    </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════
+     USER PORTAL
+══════════════════════════════════════════════════════ -->
+<div id="pg-user" class="page" style="background:var(--bg2)">
+  <div class="app-shell">
+
+    <!-- User sub-pages -->
+    <div id="u-pg-dash" class="subpage active">
+      <div class="topbar">
+        <div class="topbar-left">
+          <div class="app-logo"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="8" height="8" rx="1.5"/><rect x="13" y="3" width="8" height="8" rx="1.5"/><rect x="3" y="13" width="8" height="8" rx="1.5"/><rect x="13" y="13" width="8" height="8" rx="1.5"/></svg></div>
+          <div><div class="app-name">IT Help Desk</div><div class="app-role">User portal</div></div>
+        </div>
+        <div class="topbar-right">
+          <button class="theme-btn" onclick="toggleTheme()"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></button>
+          <div class="user-pill"><div class="user-avatar" id="u-avatar">JS</div><span class="user-name" id="u-name">Jordan S.</span></div>
+          <button class="ibtn ibtn-logout" onclick="doLogout()">Sign out</button>
+        </div>
+      </div>
+
+      <!-- Metrics -->
+      <div class="metrics" style="grid-template-columns:repeat(3,minmax(0,1fr))">
+        <div class="metric"><div class="metric-label">My open tickets</div><div class="metric-val" id="u-m-open">0</div><div class="metric-sub">active</div></div>
+        <div class="metric"><div class="metric-label">In progress</div><div class="metric-val" id="u-m-prog">0</div><div class="metric-sub">being worked</div></div>
+        <div class="metric"><div class="metric-label">Resolved</div><div class="metric-val" id="u-m-res">0</div><div class="metric-sub good">total</div></div>
+      </div>
+
+      <div class="main-grid">
+        <div>
+          <!-- My tickets -->
+          <div class="card">
+            <div class="card-head">
+              <span class="card-title">My tickets</span>
+              <button class="ibtn ibtn-prim" onclick="uShowPage('u-pg-create')">+ New ticket</button>
+            </div>
+            <div class="filter-row" id="u-filters" style="margin-bottom:.875rem"></div>
+            <div class="tkt-list" id="u-ticket-list"></div>
+          </div>
+          <!-- Ticket history -->
+          <div class="card">
+            <div class="card-head"><span class="card-title">Ticket history</span></div>
+            <div class="tkt-list" id="u-history-list"></div>
+          </div>
+        </div>
+        <div>
+          <!-- Knowledge base -->
+          <div class="card">
+            <div class="card-head"><span class="card-title">Self-help articles</span><span style="font-size:11px;color:var(--t1)">Click to read</span></div>
+            <div class="kb-grid" id="u-kb-grid"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- User: Create ticket -->
+    <div id="u-pg-create" class="subpage">
+      <div class="topbar">
+        <div class="topbar-left">
+          <button class="ibtn" onclick="uShowPage('u-pg-dash')">&#8592; My tickets</button>
+          <div><div class="app-name">New ticket</div><div class="app-role">Submit a support request</div></div>
+        </div>
+        <button class="theme-btn" onclick="toggleTheme()"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></button>
+      </div>
+      <div style="display:grid;grid-template-columns:2fr 1fr;gap:12px">
+        <div class="card" style="margin-bottom:0">
+          <div class="section-title">Describe your issue</div>
+          <div class="form-grid">
+            <div class="form-full">
+              <div class="field-label">Short description<span class="field-req">*</span></div>
+              <input type="text" id="uf-desc" maxlength="100" placeholder="e.g. Can't log into my email" oninput="document.getElementById('uf-desc-c').textContent=this.value.length">
+              <div class="char-count"><span id="uf-desc-c">0</span>/100</div>
+              <div class="val-msg" id="uv-desc"></div>
+            </div>
+            <div>
+              <div class="field-label">Category<span class="field-req">*</span></div>
+              <select id="uf-cat" onchange="uUpdateSubcat()">
+                <option value="">Select…</option>
+                <option>Network &amp; Connectivity</option><option>Hardware &amp; Peripherals</option>
+                <option>Software &amp; OS</option><option>Account &amp; Access</option>
+                <option>Email &amp; Comm Tools</option><option>Security &amp; Compliance</option>
+              </select>
+              <div class="val-msg" id="uv-cat"></div>
+            </div>
+            <div>
+              <div class="field-label">Subcategory</div>
+              <select id="uf-subcat"><option value="">Select…</option></select>
+            </div>
+            <div>
+              <div class="field-label">Priority<span class="field-req">*</span></div>
+              <select id="uf-prio">
+                <option value="">Select…</option>
+                <option value="P1">P1 — Critical</option><option value="P2">P2 — High</option>
+                <option value="P3">P3 — Medium</option><option value="P4">P4 — Low</option>
+              </select>
+              <div class="val-msg" id="uv-prio"></div>
+            </div>
+            <div><div class="field-label">Affected device</div><input type="text" id="uf-device" placeholder="e.g. LAPTOP-1234"></div>
+            <div class="form-full">
+              <div class="field-label">Full description</div>
+              <textarea id="uf-notes" rows="4" maxlength="500" placeholder="What happened? What have you already tried?" oninput="document.getElementById('uf-notes-c').textContent=this.value.length"></textarea>
+              <div class="char-count"><span id="uf-notes-c">0</span>/500</div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="card" style="margin-bottom:12px">
+            <div class="section-title">Priority guide</div>
+            <div style="display:flex;flex-direction:column;gap:8px">
+              <div style="display:flex;gap:8px;align-items:flex-start"><span class="prio p1" style="flex-shrink:0;margin-top:1px">P1</span><span style="font-size:12px;color:var(--t1);line-height:1.45">System completely down or security issue</span></div>
+              <div style="display:flex;gap:8px;align-items:flex-start"><span class="prio p2" style="flex-shrink:0;margin-top:1px">P2</span><span style="font-size:12px;color:var(--t1);line-height:1.45">Can't do key parts of my job</span></div>
+              <div style="display:flex;gap:8px;align-items:flex-start"><span class="prio p3" style="flex-shrink:0;margin-top:1px">P3</span><span style="font-size:12px;color:var(--t1);line-height:1.45">Issue exists but I can work around it</span></div>
+              <div style="display:flex;gap:8px;align-items:flex-start"><span class="prio p4" style="flex-shrink:0;margin-top:1px">P4</span><span style="font-size:12px;color:var(--t1);line-height:1.45">Minor or cosmetic problem</span></div>
+            </div>
+          </div>
+          <div style="display:flex;gap:8px">
+            <button class="ibtn" style="flex:1" onclick="uClearForm()">Clear</button>
+            <button class="ibtn ibtn-prim" style="flex:2" onclick="uSubmitTicket()">Submit ticket</button>
+          </div>
+          <div class="save-msg" id="uf-msg"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- User: Ticket detail -->
+    <div id="u-pg-detail" class="subpage">
+      <div class="topbar">
+        <div class="topbar-left">
+          <button class="ibtn" onclick="uShowPage('u-pg-dash')">&#8592; My tickets</button>
+          <div><div class="app-name" id="ud-id"></div><div class="app-role" id="ud-cat"></div></div>
+        </div>
+        <span id="ud-prio"></span>
+      </div>
+      <div class="detail-grid">
+        <div>
+          <div class="card">
+            <div class="detail-title" id="ud-desc"></div>
+            <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:5px">
+              <span class="spill" id="ud-spill"></span>
+              <span style="font-size:11px;color:var(--t2)" id="ud-time"></span>
+            </div>
+          </div>
+          <!-- Status timeline -->
+          <div class="card">
+            <div class="card-title" style="margin-bottom:.875rem">Ticket progress</div>
+            <div class="timeline" id="ud-timeline"></div>
+          </div>
+          <!-- Feedback (shown when resolved) -->
+          <div class="card" id="ud-feedback-card" style="display:none">
+            <div class="card-title">How did we do?</div>
+            <div style="font-size:13px;color:var(--t1);margin:.5rem 0">Rate your support experience</div>
+            <div class="star-row" id="ud-stars"></div>
+            <textarea id="ud-fb-notes" rows="2" placeholder="Any comments? (optional)" style="margin-top:8px"></textarea>
+            <button class="ibtn ibtn-prim" style="margin-top:8px;width:100%" onclick="uSubmitFeedback()">Submit feedback</button>
+            <div class="save-msg" id="ud-fb-msg"></div>
+          </div>
+          <!-- User live chat on ticket detail -->
+          <div class="card" id="ud-chat-card">
+            <div class="card-head">
+              <div style="display:flex;align-items:center;gap:8px">
+                <span class="card-title">Live support chat</span>
+                <span class="float-online"></span>
+                <span style="font-size:11px;color:var(--t1)">IT staff</span>
+              </div>
+            </div>
+            <div class="lc-window">
+              <div class="lc-msgs" id="ud-lc-msgs"></div>
+              <div class="lc-typing" id="ud-lc-typing"></div>
+              <div class="lc-input-row">
+                <textarea class="lc-input" id="ud-lc-input" rows="1" placeholder="Message IT support…" onkeydown="lcUserKeydown(event)"></textarea>
+                <button class="lc-send" onclick="lcUserSend()"><svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card" style="margin-bottom:0;height:fit-content">
+          <div class="card-title" style="margin-bottom:.875rem">Ticket details</div>
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <div><div style="font-size:11px;color:var(--t1);margin-bottom:2px">Category</div><div style="font-size:13px;color:var(--t0)" id="ud-cat2"></div></div>
+            <div><div style="font-size:11px;color:var(--t1);margin-bottom:2px">Priority</div><div id="ud-prio2"></div></div>
+            <div><div style="font-size:11px;color:var(--t1);margin-bottom:2px">Assigned agent</div><div style="font-size:13px;color:var(--t0)" id="ud-agent"></div></div>
+            <div><div style="font-size:11px;color:var(--t1);margin-bottom:2px">Est. resolution</div><div style="font-size:13px;color:var(--t0)" id="ud-eta"></div></div>
+            <div><div style="font-size:11px;color:var(--t1);margin-bottom:2px">Notes from agent</div><div style="font-size:13px;color:var(--t0);line-height:1.5" id="ud-notes"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- User: KB article -->
+    <div id="u-pg-kb" class="subpage">
+      <div class="topbar">
+        <div class="topbar-left">
+          <button class="ibtn" onclick="uShowPage('u-pg-dash')">&#8592; Help center</button>
+          <div><div class="app-name" id="kb-title-h"></div><div class="app-role" id="kb-cat-h"></div></div>
+        </div>
+      </div>
+      <div class="card"><div id="kb-body"></div></div>
+    </div>
+
+  </div><!-- /app-shell user -->
+
+  <!-- Floating chat bubble (user) -->
+  <button class="float-chat-btn" id="float-chat-btn" onclick="toggleFloatPanel()">
+    <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+    <span class="float-notif" id="float-notif"></span>
+  </button>
+  <div class="float-panel" id="float-panel">
+    <div class="float-header">
+      <div class="float-header-info">
+        <span class="float-online"></span>
+        <div>
+          <div style="font-size:13px;font-weight:600;color:var(--t0)" id="float-ticket-title">Support chat</div>
+          <div style="font-size:11px;color:var(--t1)" id="float-ticket-sub">IT Help Desk</div>
+        </div>
+      </div>
+      <button class="float-close" onclick="toggleFloatPanel()">&times;</button>
+    </div>
+    <div class="float-body">
+      <div class="float-msgs" id="float-msgs"></div>
+      <div class="lc-typing" id="float-typing" style="font-size:11px;min-height:14px;margin-bottom:4px"></div>
+      <div class="float-input-row">
+        <input class="float-input" id="float-input" type="text" placeholder="Message…" onkeydown="if(event.key==='Enter')lcFloatSend()">
+        <button class="lc-send" style="width:28px;height:28px" onclick="lcFloatSend()"><svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button>
+      </div>
+    </div>
+  </div>
+</div><!-- /pg-user -->
+
+<!-- ══════════════════════════════════════════════════
+     ADMIN PORTAL
+══════════════════════════════════════════════════════ -->
+<div id="pg-admin" class="page" style="background:var(--bg2)">
+  <div class="app-shell">
+
+    <div id="a-pg-dash" class="subpage active">
+      <div class="topbar">
+        <div class="topbar-left">
+          <div class="app-logo"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="8" height="8" rx="1.5"/><rect x="13" y="3" width="8" height="8" rx="1.5"/><rect x="3" y="13" width="8" height="8" rx="1.5"/><rect x="13" y="13" width="8" height="8" rx="1.5"/></svg></div>
+          <div><div class="app-name">IT Help Desk</div><div class="app-role">Admin portal</div></div>
+        </div>
+        <div class="topbar-right">
+          <button class="theme-btn" onclick="toggleTheme()"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></button>
+          <button class="ibtn ibtn-freeze" id="a-freeze-btn" onclick="toggleFreeze()">
+            <svg style="width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2" viewBox="0 0 24 24"><line x1="12" y1="2" x2="12" y2="22"/><path d="M17 7l-5 5-5-5"/><path d="M17 17l-5-5-5 5"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="4.93" y1="4.93" x2="7.76" y2="7.76"/><line x1="16.24" y1="16.24" x2="19.07" y2="19.07"/><line x1="4.93" y1="19.07" x2="7.76" y2="16.24"/><line x1="16.24" y1="7.76" x2="19.07" y2="4.93"/></svg>
+            <span id="a-freeze-lbl">Freeze</span>
+          </button>
+          <button class="ibtn" onclick="aShowPage('a-pg-inbox')">Chat inbox <span id="a-inbox-badge" style="display:none;background:var(--acc);color:#fff;font-size:10px;padding:1px 6px;border-radius:10px;margin-left:3px"></span></button>
+          <div class="user-pill"><div class="user-avatar" id="a-avatar" style="background:#d85a30">AT</div><span class="user-name" id="a-name">Admin</span></div>
+          <button class="ibtn ibtn-logout" onclick="doLogout()">Sign out</button>
+        </div>
+      </div>
+
+      <div class="metrics">
+        <div class="metric"><div class="metric-label">Open</div><div class="metric-val" id="a-m-open">0</div><div class="metric-sub">awaiting action</div></div>
+        <div class="metric"><div class="metric-label">In progress</div><div class="metric-val" id="a-m-prog">0</div><div class="metric-sub">being worked</div></div>
+        <div class="metric"><div class="metric-label">Escalated</div><div class="metric-val" id="a-m-esc">0</div><div class="metric-sub warn" id="a-m-esc-sub"></div></div>
+        <div class="metric"><div class="metric-label">Resolved</div><div class="metric-val" id="a-m-res">0</div><div class="metric-sub good">this session</div></div>
+      </div>
+
+      <div class="main-grid">
+        <div>
+          <div class="card">
+            <div id="a-frozen-banner" class="frozen-banner">
+              <svg style="width:13px;height:13px;stroke:var(--tw);fill:none;stroke-width:2" viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+              Feed frozen — tickets queuing.
+              <span class="queued-badge" id="a-queued-badge" style="display:none">0 queued</span>
+            </div>
+            <div class="search-row">
+              <div class="search-wrap">
+                <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                <input type="search" id="a-search" placeholder="Search tickets, users…" oninput="aRenderTickets()">
+              </div>
+              <select id="a-cat-filter" onchange="aRenderTickets()" style="width:auto;font-size:12px;padding:6px 8px">
+                <option value="">All categories</option>
+                <option>Network &amp; Connectivity</option><option>Hardware &amp; Peripherals</option>
+                <option>Software &amp; OS</option><option>Account &amp; Access</option>
+                <option>Email &amp; Comm Tools</option><option>Security &amp; Compliance</option>
+              </select>
+            </div>
+            <div class="card-head" style="margin-bottom:.5rem">
+              <span class="card-title" id="a-tkt-label">All tickets</span>
+              <div class="filter-row" id="a-filters"></div>
+            </div>
+            <div class="tkt-list" id="a-ticket-list"></div>
+          </div>
+        </div>
+        <div>
+          <div class="card">
+            <div class="card-head"><span class="card-title">Volume by category</span></div>
+            <div class="cat-list" id="a-cat-list"></div>
+          </div>
+          <div class="card">
+            <div class="card-head"><span class="card-title">Activity feed</span></div>
+            <div class="feed-box" id="a-feed-box"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Admin: Ticket detail -->
+    <div id="a-pg-detail" class="subpage">
+      <div class="topbar">
+        <div class="topbar-left">
+          <button class="ibtn" onclick="aShowPage('a-pg-dash')">&#8592; Dashboard</button>
+          <div><div class="app-name" id="ad-id"></div><div class="app-role" id="ad-cat"></div></div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <span id="ad-prio"></span>
+          <button class="theme-btn" onclick="toggleTheme()"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></button>
+        </div>
+      </div>
+
+      <!-- Ticket header card -->
+      <div class="card">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap">
+          <div>
+            <div class="detail-title" id="ad-desc"></div>
+            <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:5px">
+              <span class="spill" id="ad-spill"></span>
+              <span style="font-size:11px;color:var(--t2)" id="ad-time"></span>
+              <span style="font-size:11px;color:var(--t2)" id="ad-reporter"></span>
+              <span style="font-size:11px;color:var(--t2)" id="ad-dept"></span>
+            </div>
+          </div>
+          <div style="display:flex;gap:7px;flex-wrap:wrap">
+            <button class="ibtn" style="font-size:11px;border-color:var(--bs);color:var(--ts)" onclick="aResolveFromChat()" id="ad-chat-resolve-btn">Mark resolved</button>
+            <button class="ibtn" style="font-size:11px" onclick="aSaveTicket()">Save changes</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2-column workspace -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px" id="ad-workspace">
+
+        <!-- Col 1: User chat -->
+        <div class="card" style="margin-bottom:0;display:flex;flex-direction:column">
+          <div class="card-head" style="margin-bottom:.875rem">
+            <div style="display:flex;align-items:center;gap:7px">
+              <span class="card-title">Live chat</span>
+              <span class="float-online"></span>
+              <span style="font-size:11px;color:var(--t1)">with <span id="ad-chat-reporter-name" style="font-weight:600;color:var(--t0)"></span></span>
+            </div>
+          </div>
+          <div id="ad-panel-user" style="display:flex;flex-direction:column;flex:1">
+            <div class="lc-msgs" id="ad-lc-msgs" style="flex:1;min-height:280px;max-height:320px"></div>
+            <div class="lc-typing" id="ad-lc-typing"></div>
+            <div class="lc-input-row">
+              <textarea class="lc-input" id="ad-lc-input" rows="1" placeholder="Message the user…" onkeydown="lcAdminKeydown(event)"></textarea>
+              <button class="lc-send" onclick="lcAdminSend()"><svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Col 3: Ticket controls -->
+        <div class="card" style="margin-bottom:0;overflow-y:auto">
+          <div class="card-title" style="margin-bottom:.875rem">Ticket controls</div>
+          <div class="field-label">Assigned agent</div>
+          <select id="ad-agent"><option value="">Unassigned</option><option>Alex Torres</option><option>Jamie Lee</option><option>Morgan Chen</option><option>Sam Rivera</option></select>
+          <div class="field-label">Status</div>
+          <select id="ad-status" onchange="aSyncPill()"><option value="open">Open</option><option value="prog">In progress</option><option value="esc">Escalated</option><option value="res">Resolved</option></select>
+          <div class="field-label">Agent notes</div>
+          <textarea id="ad-notes" rows="3" placeholder="Internal notes visible to staff…"></textarea>
+          <div style="display:flex;flex-direction:column;gap:6px;margin-top:10px">
+            <button class="ibtn ibtn-prim" style="width:100%;justify-content:center" onclick="aSaveTicket()">Save changes</button>
+            <button class="ibtn" id="ad-esc-btn" style="width:100%;justify-content:center;border-color:var(--bd);color:var(--td)" onclick="aEscalate()">Escalate ticket</button>
+          </div>
+          <div class="save-msg" id="ad-save-msg"></div>
+          <!-- Reporter info -->
+          <div style="margin-top:16px;padding-top:14px;border-top:0.5px solid var(--b)">
+            <div class="card-title" style="margin-bottom:.75rem">Reporter info</div>
+            <div style="display:flex;flex-direction:column;gap:7px">
+              <div style="display:flex;justify-content:space-between"><span style="font-size:12px;color:var(--t1)">Name</span><span style="font-size:12px;color:var(--t0);font-weight:500" id="ad-uname">—</span></div>
+              <div style="display:flex;justify-content:space-between"><span style="font-size:12px;color:var(--t1)">Dept.</span><span style="font-size:12px;color:var(--t0)" id="ad-udept">—</span></div>
+              <div style="display:flex;justify-content:space-between"><span style="font-size:12px;color:var(--t1)">Open tickets</span><span style="font-size:12px;color:var(--t0)" id="ad-uopen">—</span></div>
+              <div style="display:flex;justify-content:space-between"><span style="font-size:12px;color:var(--t1)">Total history</span><span style="font-size:12px;color:var(--t0)" id="ad-utotal">—</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- General tips section -->
+      <div class="tips-section" id="ad-tips-section">
+        <div class="tips-header">
+          <span class="card-title" id="ad-tips-title">General tips</span>
+          <span style="font-size:11px;color:var(--t1)" id="ad-tips-sub"></span>
+        </div>
+        <div class="tips-grid" id="ad-tips-grid"></div>
+      </div>
+    </div>
+
+    <!-- Admin: Chat Inbox -->
+    <div id="a-pg-inbox" class="subpage">
+      <div class="topbar">
+        <div class="topbar-left">
+          <button class="ibtn" onclick="aShowPage('a-pg-dash')">&#8592; Dashboard</button>
+          <div><div class="app-name">Chat inbox</div><div class="app-role">Live conversations with users</div></div>
+        </div>
+        <button class="theme-btn" onclick="toggleTheme()"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></button>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 2fr;gap:12px">
+        <div class="card" style="margin-bottom:0">
+          <div class="card-head"><span class="card-title">Conversations</span><span id="inbox-unread-count" style="font-size:11px;color:var(--ti)"></span></div>
+          <div class="inbox-list" id="inbox-list"></div>
+        </div>
+        <div class="card" style="margin-bottom:0;display:flex;flex-direction:column" id="inbox-chat-card">
+          <div id="inbox-empty" style="flex:1;display:flex;align-items:center;justify-content:center">
+            <div style="text-align:center;color:var(--t2)">
+              <svg viewBox="0 0 24 24" style="width:32px;height:32px;stroke:var(--t2);fill:none;stroke-width:1.5;margin-bottom:8px"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+              <div style="font-size:13px">Select a conversation</div>
+            </div>
+          </div>
+          <div id="inbox-chat-active" style="display:none;flex-direction:column;flex:1">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.875rem;flex-wrap:wrap;gap:8px">
+              <div>
+                <div class="card-title" id="inbox-chat-name"></div>
+                <div style="font-size:11px;color:var(--t1);margin-top:2px" id="inbox-chat-ticket"></div>
+              </div>
+              <button class="ibtn" style="font-size:11px;border-color:var(--bs);color:var(--ts)" onclick="aResolveFromInbox()" id="inbox-resolve-btn">Mark resolved</button>
+            </div>
+            <div class="lc-window" style="height:320px">
+              <div class="lc-msgs" id="inbox-lc-msgs"></div>
+              <div class="lc-typing" id="inbox-lc-typing"></div>
+              <div class="lc-input-row">
+                <textarea class="lc-input" id="inbox-lc-input" rows="1" placeholder="Reply…" onkeydown="lcInboxKeydown(event)"></textarea>
+                <button class="lc-send" onclick="lcInboxSend()"><svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Admin: AI Chatbot -->
+
+  </div><!-- /app-shell admin -->
+</div><!-- /pg-admin -->
+
+<script>
+/* ═══════════════════════════════════════════════════════
+   DATA & CONSTANTS
+═══════════════════════════════════════════════════════ */
+const CATS=[
+  {name:"Network & Connectivity",color:"#378ADD"},
+  {name:"Hardware & Peripherals",color:"#1D9E75"},
+  {name:"Software & OS",color:"#BA7517"},
+  {name:"Account & Access",color:"#D4537E"},
+  {name:"Email & Comm Tools",color:"#7F77DD"},
+  {name:"Security & Compliance",color:"#D85A30"},
+];
+const SUBCATS={
+  "Network & Connectivity":["VPN","WiFi","DNS","Remote desktop","Network printer","Ethernet"],
+  "Hardware & Peripherals":["Laptop","Desktop","Monitor","Keyboard/Mouse","Printer","USB device"],
+  "Software & OS":["Windows","macOS","Microsoft Office","Adobe","Drivers","OS update"],
+  "Account & Access":["Active Directory","MFA","Password reset","Email access","SSO","Permissions"],
+  "Email & Comm Tools":["Outlook","Teams","Zoom","OneDrive","SharePoint","Calendar"],
+  "Security & Compliance":["Suspicious login","Phishing","Antivirus","DLP","Unauthorized software","Data breach"],
+};
+
+/* ═══════════════════════════════════════════════════════
+   TIPS DATABASE — keyed by "Category" and "Category|Subcategory"
+═══════════════════════════════════════════════════════ */
+const TIPS_DB = {
+  "Network & Connectivity": [
+    {type:"info", label:"First checks", title:"Start with the basics", body:"", steps:["Check physical cables or Wi-Fi signal strength first.","Ping 8.8.8.8 to confirm internet connectivity vs internal network.","Reboot the router/switch for the affected segment.","Check if the issue affects one user or multiple — helps isolate scope."]},
+    {type:"warn", label:"Common cause", title:"DNS is often the culprit", body:"Many 'no internet' issues are DNS failures, not true connectivity loss. Try nslookup or manually set DNS to 8.8.8.8 to test."},
+    {type:"success", label:"Quick fix", title:"Release & renew IP", body:"", steps:["Run ipconfig /release then ipconfig /renew on Windows.","Run sudo dhclient -r && sudo dhclient on Linux/Mac.","Flush DNS: ipconfig /flushdns (Windows) or sudo dscacheutil -flushcache (Mac)."]},
+    {type:"danger", label:"Escalate if", title:"When to escalate to Tier 2", body:"Escalate if: multiple users affected, switch/router suspected hardware failure, DHCP server unreachable, or VPN gateway is down."},
+  ],
+  "Network & Connectivity|VPN": [
+    {type:"info", label:"Checklist", title:"VPN troubleshooting order", body:"", steps:["Confirm user has internet without VPN first.","Check VPN client version — outdated clients often break after server updates.","Verify credentials haven't expired (check Active Directory).","Try a different VPN server/endpoint if available.","Reinstall the VPN client as a last resort before escalating."]},
+    {type:"warn", label:"Common issue", title:"Split tunneling conflicts", body:"Split tunneling misconfigurations cause partial connectivity. Check VPN policy — some traffic may be routing incorrectly through the tunnel."},
+    {type:"success", label:"Quick fix", title:"Clear VPN cache & reconnect", body:"Delete cached VPN credentials from Windows Credential Manager or macOS Keychain, then reconnect fresh."},
+  ],
+  "Network & Connectivity|WiFi": [
+    {type:"info", label:"Checklist", title:"WiFi diagnosis steps", body:"", steps:["Check if other devices on same SSID are affected.","Try forgetting the network and reconnecting.","Check for interference — move away from microwaves, Bluetooth devices.","Verify the user is connecting to the correct SSID (5GHz vs 2.4GHz).","Check if the access point shows in network scan — may need AP restart."]},
+    {type:"warn", label:"Driver issue", title:"Outdated WiFi drivers", body:"Slow or dropping WiFi on laptops is often a driver issue. Check Device Manager for WiFi adapter driver version and update if behind."},
+  ],
+  "Network & Connectivity|DNS": [
+    {type:"info", label:"Checklist", title:"DNS resolution steps", body:"", steps:["Run nslookup [domain] to confirm DNS failure.","Try alternate DNS (8.8.8.8) to isolate internal vs external DNS issue.","Flush DNS cache: ipconfig /flushdns.","Check hosts file for rogue entries: C:\Windows\System32\drivers\etc\hosts.","If internal domain fails, check DNS server health in AD."]},
+  ],
+  "Network & Connectivity|Remote desktop": [
+    {type:"info", label:"Checklist", title:"RDP troubleshooting", body:"", steps:["Confirm Remote Desktop is enabled on target machine.","Check firewall — port 3389 must be open.","Verify the user has Remote Desktop permission in AD.","Check if the machine is awake (Wake-on-LAN may be needed).","Try IP address instead of hostname to rule out DNS issue."]},
+    {type:"warn", label:"Security note", title:"NLA may block connection", body:"Network Level Authentication failures look like connection refused. Verify the user's credentials haven't expired and NLA is consistent between client and server."},
+  ],
+  "Hardware & Peripherals": [
+    {type:"info", label:"First checks", title:"Hardware diagnosis basics", body:"", steps:["Always test with a known-good cable, port, or replacement device first.","Check Device Manager for driver errors (yellow triangles).","Reboot — many hardware issues clear after a fresh boot.","Check physical connections — USB, display ports, power cables."]},
+    {type:"warn", label:"Common trap", title:"Don't skip the obvious", body:"Most hardware tickets are solved by swapping cables or trying a different port. Check the simplest physical causes before deeper diagnosis."},
+    {type:"danger", label:"Data risk", title:"Back up before hardware repair", body:"If the issue may involve storage (failing drive, motherboard), ensure user data is backed up before proceeding with any hardware replacement."},
+  ],
+  "Hardware & Peripherals|Laptop": [
+    {type:"info", label:"Checklist", title:"Laptop common fixes", body:"", steps:["Battery issues: drain fully, then charge to recalibrate.","Display flicker: check display cable seating (if accessible) or update GPU drivers.","Overheating/throttling: clean vents, check fan operation, run diagnostics.","Keyboard/trackpad unresponsive: external USB keyboard test to isolate hardware vs driver.","Won't boot: try hard reset (hold power 10s), check for BIOS POST beeps."]},
+    {type:"warn", label:"Warranty check", title:"Check warranty before opening", body:"Always verify warranty status before physical repair. Opening a sealed unit may void coverage. Use manufacturer diagnostic tools first."},
+  ],
+  "Hardware & Peripherals|Monitor": [
+    {type:"info", label:"Checklist", title:"Monitor troubleshooting", body:"", steps:["Test with a different cable (DisplayPort/HDMI/USB-C).","Try the monitor on a different computer to isolate GPU vs monitor.","Check display settings — wrong resolution or refresh rate causes blank/flickering screen.","For multi-monitor: check GPU supports the number of active outputs.","Update GPU drivers before replacing hardware."]},
+  ],
+  "Hardware & Peripherals|Printer": [
+    {type:"info", label:"Checklist", title:"Printer offline fixes", body:"", steps:["Restart the print spooler: Services > Print Spooler > Restart.","Delete stuck jobs from the print queue.","Check printer IP hasn't changed (reassign static IP for network printers).","Reinstall driver from manufacturer site, not Windows generic driver.","For shared printers: confirm print server is reachable."]},
+    {type:"success", label:"Quick fix", title:"Clear print spooler", body:"Run as admin: net stop spooler, delete files in C:\Windows\System32\spool\PRINTERS, then net start spooler. Fixes most stuck queue issues instantly."},
+  ],
+  "Software & OS": [
+    {type:"info", label:"First checks", title:"Software triage approach", body:"", steps:["Reproduce the issue — always. Get exact error message and code.","Check Windows Event Viewer (System + Application logs) for errors.","Test in Safe Mode to isolate third-party conflicts.","Check if issue appeared after a recent update or installation.","Try creating a new user profile — rules out corrupted profile."]},
+    {type:"warn", label:"Common cause", title:"Recent update likely culprit", body:"Most sudden software issues follow a Windows Update or application update. Check update history in Settings > Update & Security > View Update History."},
+    {type:"danger", label:"Before reinstalling", title:"Repair before full reinstall", body:"Always try Office Repair, SFC /scannow, or DISM /RestoreHealth before a full OS or application reinstall. Saves hours of reconfiguration."},
+  ],
+  "Software & OS|Windows": [
+    {type:"info", label:"Toolkit", title:"Essential Windows repair commands", body:"", steps:["sfc /scannow — scans and repairs corrupted system files.","DISM /Online /Cleanup-Image /RestoreHealth — repairs Windows image.","chkdsk C: /f /r — checks and repairs disk errors (needs reboot).","bootrec /fixmbr + /fixboot — fixes boot issues.","msconfig > Boot > Safe Boot — boot into Safe Mode for diagnosis."]},
+    {type:"success", label:"Quick fix", title:"Windows won't update fix", body:"", steps:["Stop Windows Update service (net stop wuauserv).","Delete contents of C:\Windows\SoftwareDistribution\Download.","Restart service (net start wuauserv).","Run Windows Update again."]},
+  ],
+  "Software & OS|Microsoft Office": [
+    {type:"info", label:"Checklist", title:"Office crash/error fixes", body:"", steps:["Run Office in Safe Mode: hold Ctrl + click app icon.","Disable add-ins: File > Options > Add-ins > COM Add-ins > Go > uncheck all.","Run Quick Repair: Control Panel > Office > Change > Quick Repair.","Clear Office cache: %localappdata%\Microsoft\Office\16.0\OfficeFileCache.","Reset Outlook profile if email-specific issue."]},
+    {type:"warn", label:"Licensing", title:"Check activation status", body:"Office crashes and 'unlicensed product' banners often coexist. Check via File > Account. Re-sign in with work account to reactivate."},
+  ],
+  "Software & OS|Drivers": [
+    {type:"info", label:"Checklist", title:"Driver troubleshooting", body:"", steps:["Use Device Manager to identify driver errors (yellow ! icon).","Roll back driver if issue started after recent update.","Use manufacturer's driver download (not Windows Update generic).","For GPU: DDU (Display Driver Uninstaller) for clean GPU driver removal.","Check driver signature enforcement if driver won't install."]},
+  ],
+  "Account & Access": [
+    {type:"info", label:"First checks", title:"Account issue triage", body:"", steps:["Confirm if account is locked, disabled, or expired in AD Users & Computers.","Check password expiration date.","Verify the user is connecting to the correct domain.","Test with a different machine to isolate device vs account issue.","Check group policy isn't blocking access (gpresult /r)."]},
+    {type:"warn", label:"Security rule", title:"Verify identity before any reset", body:"Always verify the user's identity through a secondary channel (manager confirmation, employee ID, video call) before resetting credentials. Never reset based on email request alone."},
+    {type:"danger", label:"Escalate if", title:"When to escalate account issues", body:"Escalate to Tier 2 or Security if: account compromised, multiple accounts locked simultaneously, or admin account affected."},
+  ],
+  "Account & Access|Active Directory": [
+    {type:"info", label:"Checklist", title:"AD account troubleshooting", body:"", steps:["Check account in ADUC: Active Directory Users & Computers.","Look for: account disabled, locked, expired, or password must change.","Unlock: right-click account > Properties > Account > Unlock.","Reset password via ADUC (right-click > Reset Password).","Check OU-level policies that may restrict login.","Verify machine is joined to domain: System Properties > Computer Name."]},
+    {type:"success", label:"Quick fix", title:"Unlock AD account via PowerShell", body:"Unlock-ADAccount -Identity username. Then: Set-ADAccountPassword -Identity username -Reset -NewPassword (Read-Host -AsSecureString). Faster than ADUC for remote support."},
+  ],
+  "Account & Access|MFA": [
+    {type:"info", label:"Checklist", title:"MFA not working fixes", body:"", steps:["Confirm user's phone has correct time (NTP sync) — TOTP codes require accurate time.","Re-register MFA device via Azure AD / Okta admin portal.","Check if user has backup MFA method configured.","Temporary bypass: use admin portal to generate a temp access pass.","For SMS issues: check phone number is correct and receiving signal."]},
+    {type:"warn", label:"Security note", title:"MFA bypass is high risk", body:"Temporary MFA bypass must be time-limited (max 1 hour) and logged. Notify security team. Never disable MFA permanently for convenience."},
+  ],
+  "Account & Access|Password reset": [
+    {type:"info", label:"Checklist", title:"Password reset procedure", body:"", steps:["Verify identity via manager confirmation or employee ID before resetting.","Reset in AD: right-click user > Reset Password > check 'User must change password'.","Ensure new password meets complexity policy (length, special chars).","Unlock account if also locked.","Advise user to update saved passwords in browser/apps after reset."]},
+  ],
+  "Email & Comm Tools": [
+    {type:"info", label:"First checks", title:"Email/comms issue triage", body:"", steps:["Confirm issue is app-specific or affects webmail too (rules out client issue).","Check Microsoft 365 Service Health Dashboard for outages.","Test on another device/browser to isolate client vs server.","Check license assignment in M365 admin center.","Review mailbox storage — full mailbox blocks send/receive."]},
+    {type:"warn", label:"Check first", title:"Always check service status", body:"Before any deep troubleshooting, check status.office365.com and Microsoft 365 admin center > Service health. Many issues are Microsoft-side outages."},
+  ],
+  "Email & Comm Tools|Outlook": [
+    {type:"info", label:"Checklist", title:"Outlook common fixes", body:"", steps:["Start in Safe Mode: outlook.exe /safe","Create new Outlook profile: Control Panel > Mail > Show Profiles > Add.","Run Office Repair for persistent crashes.","Clear Outlook cache: %localappdata%\Microsoft\Outlook — delete .ost file.","Check autodiscover: outlook.exe /autoconfigure","Rebuild index: File > Options > Search > Indexing Options > Rebuild."]},
+    {type:"success", label:"Quick fix", title:"Outlook stuck on 'Loading Profile'", body:"Delete the OST file at %localappdata%\Microsoft\Outlook\. Outlook will recreate it and re-sync from server. Fixes most profile corruption issues."},
+  ],
+  "Email & Comm Tools|Teams": [
+    {type:"info", label:"Checklist", title:"Teams troubleshooting", body:"", steps:["Clear Teams cache: %appdata%\Microsoft\Teams — delete all contents except 'storage.json'.","Sign out > sign in completely.","Check Teams version and update (Help > About).","Try Teams web app at teams.microsoft.com to isolate desktop client issue.","For meeting audio issues: check default audio device in Teams settings."]},
+    {type:"success", label:"Quick fix", title:"Clear Teams cache (one-liner)", body:"Close Teams. In Run (Win+R): %appdata%\Microsoft\Teams. Delete: Cache, blob_storage, databases, GPUcache, IndexedDB, Local Storage, tmp folders. Relaunch Teams."},
+  ],
+  "Email & Comm Tools|Zoom": [
+    {type:"info", label:"Checklist", title:"Zoom audio/video fixes", body:"", steps:["Check default audio device: Zoom > Settings > Audio > select correct device.","Test mic/speakers in Zoom audio settings before joining.","For echo: only one device should have speakers unmuted in a room.","Video not working: check camera permissions in Windows Privacy settings.","Reinstall Zoom if persistent — settings > uninstall and clean install."]},
+  ],
+  "Email & Comm Tools|OneDrive": [
+    {type:"info", label:"Checklist", title:"OneDrive sync issues", body:"", steps:["Check OneDrive tray icon for specific error message.","Pause and resume sync.","Check storage quota: Settings > Account.","Files with illegal characters or too-long paths won't sync — check for errors in OneDrive activity log.","Reset OneDrive: %localappdata%\Microsoft\OneDrive\onedrive.exe /reset"]},
+    {type:"warn", label:"File naming", title:"Common sync failure cause", body:"File/folder names with characters like < > : * ? \ | or paths exceeding 400 characters will silently fail to sync. Check filenames if specific files aren't syncing."},
+  ],
+  "Security & Compliance": [
+    {type:"danger", label:"Priority", title:"All security tickets are P1 or P2", body:"Never downgrade security tickets. Treat every security report as urgent until confirmed otherwise. Time is critical in breach scenarios."},
+    {type:"info", label:"First steps", title:"Security incident response", body:"", steps:["Isolate affected machine from network immediately if breach suspected.","Preserve evidence — do not reboot before forensic check.","Notify security team and manager immediately.","Document timeline: when did user first notice? What changed?","Check AD for unauthorized changes, new accounts, or group membership changes."]},
+    {type:"warn", label:"Chain of custody", title:"Document everything", body:"Log every action taken, timestamp, and who authorized it. Security incidents may become legal matters. Never remediate without authorization from security lead."},
+  ],
+  "Security & Compliance|Phishing": [
+    {type:"danger", label:"Immediate action", title:"Phishing response steps", body:"", steps:["Tell user: do NOT click links, open attachments, or reply.","If they already clicked: disconnect machine from network immediately.","Forward the email as attachment to security@company.com.","Delete the email from inbox.","If credentials may be compromised: force password reset and MFA re-register.","Preserve email headers for forensic analysis before deleting."]},
+    {type:"warn", label:"Investigation", title:"Check for wider exposure", body:"If one user received phishing, others likely did too. Check email gateway logs for the same sender/domain across the organization. Consider org-wide block."},
+  ],
+  "Security & Compliance|Suspicious login": [
+    {type:"danger", label:"Immediate action", title:"Suspicious login response", body:"", steps:["Disable the account immediately in AD while investigating.","Check Azure AD Sign-in logs for login location, IP, device.","Review recent activity: emails sent, files accessed, forwards set up.","Force password reset + MFA re-registration on all sessions.","Check for mail forwarding rules set by attacker (common persistence method).","Report to security team with full log export."]},
+    {type:"warn", label:"Red flags", title:"Signs of active compromise", body:"Watch for: inbox rules forwarding to external address, new admin accounts created, large file downloads, password change attempts, or login from impossible geography."},
+  ],
+  "Security & Compliance|Antivirus": [
+    {type:"info", label:"Checklist", title:"AV issues — out of date or alert", body:"", steps:["Check AV console for definition version and last update time.","Force definition update from AV management console.","If AV is generating alerts: quarantine file and review in sandbox.","Check if AV service is running: services.msc > find AV service.","For endpoint deployment issues: check agent connectivity to AV server."]},
+  ],
+  "Security & Compliance|Unauthorized software": [
+    {type:"danger", label:"Policy", title:"Unauthorized software procedure", body:"", steps:["Document the software name, version, and install date.","Remove using Programs & Features or management tool.","Check how it was installed — user rights may need reviewing.","Scan for additional unauthorized software via endpoint management tool.","Issue formal warning per company policy and log in ticketing system.","If malicious software suspected: escalate to Tier 3 security immediately."]},
+  ],
+};
+
+function renderTips(cat, subcat) {
+  const section = document.getElementById('ad-tips-section');
+  const grid = document.getElementById('ad-tips-grid');
+  const titleEl = document.getElementById('ad-tips-title');
+  const subEl = document.getElementById('ad-tips-sub');
+  if (!section || !grid) return;
+
+  // Build lookup keys — specific subcat first, then category fallback
+  const specificKey = subcat ? cat + '|' + subcat : null;
+  let tips = (specificKey && TIPS_DB[specificKey]) ? TIPS_DB[specificKey] : (TIPS_DB[cat] || []);
+
+  if (!tips.length) {
+    section.style.display = 'none';
+    return;
+  }
+
+  section.style.display = 'block';
+  titleEl.textContent = subcat ? subcat + ' — tips & best practices' : cat + ' — tips & best practices';
+  subEl.textContent = cat + (subcat ? ' › ' + subcat : '');
+
+  const typeIcons = { info: '●', warn: '▲', danger: '◆', success: '✓' };
+
+  grid.innerHTML = tips.map(tip => {
+    const stepsHtml = tip.steps && tip.steps.length
+      ? '<div class="tip-steps">' + tip.steps.map((s, i) =>
+          '<div class="tip-step"><span class="tip-step-num">' + (i+1) + '.</span><span>' + s + '</span></div>'
+        ).join('') + '</div>'
+      : '';
+    return '<div class="tip-card tip-' + tip.type + '">' +
+      '<div class="tip-label tip-' + tip.type + '">' + (typeIcons[tip.type]||'●') + ' ' + tip.label + '</div>' +
+      '<div class="tip-title">' + tip.title + '</div>' +
+      (tip.body ? '<div class="tip-body">' + tip.body + '</div>' : '') +
+      stepsHtml +
+      '</div>';
+  }).join('');
+}
+
+const POOL=[
+  ["VPN not connecting after update","Slow WiFi on floor 3","DNS lookup failures","Network printer unreachable","Remote desktop timeout"],
+  ["Laptop display flickering","USB hub not detected","Keyboard unresponsive","Second monitor no signal","Printer offline"],
+  ["Outlook crashing on startup","Blue screen on Windows 11","App not launching after update","Driver install failed","OS upgrade stuck"],
+  ["User locked out of AD","MFA code not arriving","Shared mailbox access denied","Password reset expired","SSO redirect loop"],
+  ["Teams messages not syncing","Calendar invites not sending","Shared inbox errors","Zoom audio not working","OneDrive sync stuck"],
+  ["Suspicious login alert","Phishing email reported","AV out of date","DLP policy triggered","Unauthorized software found"],
+];
+const REPORTERS=["J. Smith","M. Davis","R. Patel","L. Kim","T. Brown","A. Chen","B. White","C. Garcia","D. Lee","E. Wilson"];
+const DEPTS=["Marketing","Engineering","Finance","HR","Operations","Sales"];
+const PRIOS=["P1","P1","P2","P2","P2","P3","P3","P3","P4"];
+const AGENTS=["Alex Torres","Jamie Lee","Morgan Chen","Sam Rivera"];
+const STATUS_TXT={open:"Open",prog:"In progress",esc:"Escalated",res:"Resolved"};
+const ETA={P1:"2–4 hours",P2:"4–8 hours",P3:"1–2 business days",P4:"3–5 business days"};
+const SUN=`<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>`;
+const MOON=`<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>`;
+
+const KB_ARTICLES=[
+  {id:"kb1",cat:"Network & Connectivity",title:"VPN connection troubleshooting",sub:"Step-by-step guide to fix common VPN issues",body:`<h3 style="font-size:15px;font-weight:600;margin-bottom:12px">VPN connection troubleshooting</h3><p style="color:var(--t1);margin-bottom:12px;line-height:1.7">If your VPN is not connecting, follow these steps before submitting a ticket:</p><ol style="color:var(--t0);line-height:2;padding-left:18px"><li>Ensure you are connected to the internet (try loading a website).</li><li>Restart the VPN client application completely.</li><li>Check that your credentials haven't expired — try logging into the company portal.</li><li>Disable any personal firewall or antivirus temporarily and retry.</li><li>Restart your computer and try again.</li><li>If none of the above work, submit a P2 ticket with your error message.</li></ol>`},
+  {id:"kb2",cat:"Account & Access",title:"Resetting your AD password",sub:"How to unlock your account or reset your password",body:`<h3 style="font-size:15px;font-weight:600;margin-bottom:12px">Active Directory password reset</h3><p style="color:var(--t1);margin-bottom:12px;line-height:1.7">Locked out? Here's what to do:</p><ol style="color:var(--t0);line-height:2;padding-left:18px"><li>Visit the self-service portal at <em>reset.company.internal</em>.</li><li>Enter your employee ID and answer your security questions.</li><li>Choose a new password meeting complexity requirements.</li><li>Wait 5 minutes for changes to propagate.</li><li>If you cannot access the portal, call the help desk directly.</li></ol>`},
+  {id:"kb3",cat:"Email & Comm Tools",title:"Fixing Outlook startup crashes",sub:"Resolve Outlook crashing on launch",body:`<h3 style="font-size:15px;font-weight:600;margin-bottom:12px">Outlook crash on startup — quick fixes</h3><ol style="color:var(--t0);line-height:2;padding-left:18px"><li>Start Outlook in safe mode: hold <strong>Ctrl</strong> while clicking the Outlook icon.</li><li>If it opens, disable add-ins one by one via <em>File → Options → Add-ins</em>.</li><li>Run Office repair: <em>Control Panel → Programs → Microsoft 365 → Repair</em>.</li><li>Clear the Outlook cache folder at <em>%localappdata%\\Microsoft\\Outlook</em>.</li><li>Create a new Outlook profile if the issue persists.</li></ol>`},
+  {id:"kb4",cat:"Hardware & Peripherals",title:"Printer offline troubleshooting",sub:"Get your printer back online fast",body:`<h3 style="font-size:15px;font-weight:600;margin-bottom:12px">Printer showing offline</h3><ol style="color:var(--t0);line-height:2;padding-left:18px"><li>Check that the printer is powered on and has paper.</li><li>Restart the printer and wait 60 seconds.</li><li>On your PC: <em>Settings → Bluetooth & devices → Printers</em> — right-click and choose <em>See what's printing</em>.</li><li>Click <em>Printer → Use Printer Online</em>.</li><li>If it still shows offline, remove and re-add the printer.</li><li>Reinstall the driver from the manufacturer's website if needed.</li></ol>`},
+  {id:"kb5",cat:"Software & OS",title:"Windows update troubleshooting",sub:"Fix stuck or failing Windows updates",body:`<h3 style="font-size:15px;font-weight:600;margin-bottom:12px">Windows update issues</h3><ol style="color:var(--t0);line-height:2;padding-left:18px"><li>Run the Windows Update Troubleshooter: <em>Settings → System → Troubleshoot → Windows Update</em>.</li><li>Clear the update cache: stop <em>wuauserv</em>, delete <em>C:\\Windows\\SoftwareDistribution\\Download</em>, restart the service.</li><li>Ensure at least 10 GB of free disk space is available.</li><li>Temporarily disconnect VPN and retry the update.</li><li>If updates fail repeatedly, note the error code and submit a P3 ticket.</li></ol>`},
+  {id:"kb6",cat:"Security & Compliance",title:"Handling a phishing email",sub:"What to do if you receive a suspicious email",body:`<h3 style="font-size:15px;font-weight:600;margin-bottom:12px">Received a suspicious email?</h3><p style="color:var(--t1);margin-bottom:10px;line-height:1.7"><strong style="color:var(--td)">Do not click any links or open attachments.</strong></p><ol style="color:var(--t0);line-height:2;padding-left:18px"><li>Do not reply to the sender.</li><li>Forward the email as an attachment to <em>security@company.com</em>.</li><li>Submit a P1 ticket tagged Security & Compliance immediately.</li><li>If you clicked a link, disconnect from the network and contact IT urgently.</li><li>Change your password as a precaution.</li></ol>`},
+];
+
+
+
+let tickets=[], idCounter=480, isDark=false, frozen=false, queue=[];
+let aCurrentId=null, uCurrentId=null, uActiveFilter='all';
+let currentUser={role:"user",name:"Jordan Smith",dept:"Marketing"};
+let aActiveFilter="all";
+
+/* ═══════════════════════════════════════════════════════
+   SEED DATA
+═══════════════════════════════════════════════════════ */
+function mkTicket(ov={}){
+  const ci=Math.floor(Math.random()*CATS.length);
+  const pool=POOL[ci];
+  return{
+    id:"TK-0"+(++idCounter),cat:CATS[ci].name,
+    desc:pool[Math.floor(Math.random()*pool.length)],
+    prio:PRIOS[Math.floor(Math.random()*PRIOS.length)],
+    status:"open",agent:"",notes:"",ts:Date.now(),subcat:"",
+    reporter:REPORTERS[Math.floor(Math.random()*REPORTERS.length)],
+    dept:DEPTS[Math.floor(Math.random()*DEPTS.length)],
+    feedback:null,...ov
+  };
+}
+function seed(){
+  const b=Date.now();
+  tickets=[
+    mkTicket({id:"TK-0480",cat:"Network & Connectivity",desc:"VPN not connecting after update",prio:"P1",status:"esc",agent:"Alex Torres",ts:b-3600000,reporter:"Jordan Smith",dept:"Marketing"}),
+    mkTicket({id:"TK-0479",cat:"Software & OS",desc:"Outlook crashing on startup",prio:"P2",status:"prog",agent:"Jamie Lee",ts:b-2400000,reporter:"M. Davis",dept:"Finance"}),
+    mkTicket({id:"TK-0478",cat:"Hardware & Peripherals",desc:"Printer offline in conference room B",prio:"P3",status:"open",ts:b-1800000,reporter:"R. Patel",dept:"HR"}),
+    mkTicket({id:"TK-0477",cat:"Account & Access",desc:"User locked out of Active Directory",prio:"P1",status:"prog",agent:"Morgan Chen",ts:b-1200000,reporter:"L. Kim",dept:"Engineering"}),
+    mkTicket({id:"TK-0476",cat:"Security & Compliance",desc:"Suspicious login alert triggered",prio:"P1",status:"esc",agent:"Sam Rivera",ts:b-900000,reporter:"T. Brown",dept:"Sales"}),
+    mkTicket({id:"TK-0475",cat:"Network & Connectivity",desc:"Slow WiFi on floor 3 workstations",prio:"P2",status:"prog",agent:"Alex Torres",ts:b-600000,reporter:"Jordan Smith",dept:"Marketing"}),
+    mkTicket({id:"TK-0474",cat:"Software & OS",desc:"Adobe CC license expired",prio:"P4",status:"open",ts:b-300000,reporter:"B. White",dept:"Operations"}),
+    mkTicket({id:"TK-0473",cat:"Hardware & Peripherals",desc:"Laptop display flickering",prio:"P3",status:"res",agent:"Jamie Lee",ts:b-86400000,reporter:"Jordan Smith",dept:"Marketing",notes:"Replaced display cable. Resolved."}),
+  ];
+  idCounter=480;
+}
+
+/* ═══════════════════════════════════════════════════════
+   AUTH
+═══════════════════════════════════════════════════════ */
+let selectedRole="user";
+function selectRole(r){
+  selectedRole=r;
+  document.getElementById("role-user").classList.toggle("selected",r==="user");
+  document.getElementById("role-admin").classList.toggle("selected",r==="admin");
+  document.getElementById("dept-field").style.display=r==="admin"?"none":"block";
+}
+function doLogin(){
+  const name=document.getElementById("login-name").value.trim();
+  if(!name){document.getElementById("login-err").textContent="Please enter your name.";return;}
+  currentUser={role:selectedRole,name,dept:document.getElementById("login-dept").value};
+  document.getElementById("login-err").textContent="";
+  if(selectedRole==="user"){
+    const ini=name.split(" ").map(w=>w[0]).join("").toUpperCase().slice(0,2);
+    document.getElementById("u-avatar").textContent=ini;
+    document.getElementById("u-name").textContent=name.split(" ")[0]+" "+((name.split(" ")[1]||"")[0]||"")+(name.split(" ")[1]?".":"");
+    showRoot("pg-user");document.getElementById("u-pg-dash").classList.add("active");uRenderAll();
+  } else {
+    const ini=name.split(" ").map(w=>w[0]).join("").toUpperCase().slice(0,2);
+    document.getElementById("a-avatar").textContent=ini;
+    document.getElementById("a-name").textContent=name.split(" ")[0];
+    showRoot("pg-admin");document.getElementById("a-pg-dash").classList.add("active");aRenderAll();
+    if(window._spawnInterval)clearInterval(window._spawnInterval);
+    window._spawnInterval=setInterval(autoSpawn,20000);
+  }
+}
+function doLogout(){
+  // Clear session state
+  frozen=false;
+  queue=[];
+  Object.keys(chatStore).forEach(k=>delete chatStore[k]);
+  aCurrentId=null;
+  uCurrentId=null;
+  activeInboxTicketId=null;
+  floatTicketId=null;
+  // Clear spawn interval
+  if(window._spawnInterval){clearInterval(window._spawnInterval);window._spawnInterval=null;}
+  // Reset freeze button
+  const fb=document.getElementById("a-freeze-btn");
+  if(fb){fb.classList.remove("frozen");document.getElementById("a-freeze-lbl").textContent="Freeze";}
+  const ab=document.getElementById("a-frozen-banner");if(ab)ab.classList.remove("on");
+
+  // Navigate
+  showRoot("pg-login");
+  document.getElementById("pg-admin").querySelectorAll(".subpage").forEach(p=>p.classList.remove("active"));
+  document.getElementById("pg-user").querySelectorAll(".subpage").forEach(p=>p.classList.remove("active"));
+  document.getElementById("a-pg-dash").classList.add("active");
+  document.getElementById("u-pg-dash").classList.add("active");
+}
+function showRoot(id){
+  document.querySelectorAll("#pg-login,#pg-user,#pg-admin").forEach(p=>p.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+}
+
+/* ═══════════════════════════════════════════════════════
+   THEME
+═══════════════════════════════════════════════════════ */
+function toggleTheme(){
+  isDark=!isDark;document.body.classList.toggle("dark",isDark);
+  document.querySelectorAll(".theme-btn svg").forEach(s=>s.innerHTML=isDark?MOON:SUN);
+}
+
+/* ═══════════════════════════════════════════════════════
+   FREEZE
+═══════════════════════════════════════════════════════ */
+function toggleFreeze(){
+  frozen=!frozen;
+  const btn=document.getElementById("a-freeze-btn");
+  const lbl=document.getElementById("a-freeze-lbl");
+  const banner=document.getElementById("a-frozen-banner");
+  const badge=document.getElementById("a-queued-badge");
+  if(frozen){
+    btn.classList.add("frozen");lbl.textContent="Unfreeze";banner.classList.add("on");
+    aAddFeed("Feed frozen","","freeze");
+  } else {
+    btn.classList.remove("frozen");lbl.textContent="Freeze";banner.classList.remove("on");badge.style.display="none";
+    if(queue.length){
+      const n=queue.length;queue.forEach(t=>{tickets.unshift(t);aAddFeed(t.desc,t.cat,"new");});queue=[];
+      aRenderAll();aAddFeed(`Unfrozen — ${n} ticket${n>1?"s":""} added`,"","freeze");
+      setTimeout(()=>{const els=document.querySelectorAll(".tkt");let i=0;const f=()=>{if(i<Math.min(n,els.length)){els[i].classList.add("flash");setTimeout(()=>els[i].classList.remove("flash"),1500);i++;setTimeout(f,120);}};f();},50);
+    } else {aAddFeed("Feed unfrozen","","freeze");}
+  }
+}
+function autoSpawn(){
+  if(Math.random()<0.65){
+    const t=mkTicket();
+    if(frozen){
+      queue.push(t);
+      const qb=document.getElementById("a-queued-badge");qb.style.display="inline-block";qb.textContent=`${queue.length} queued`;
+    } else {
+      tickets.unshift(t);aRenderAll();aAddFeed(t.desc,t.cat,"new");
+      setTimeout(()=>{const el=document.querySelector(`[data-id="${t.id}"]`);if(el){el.classList.add("flash");setTimeout(()=>el.classList.remove("flash"),1800);}},30);
+    }
+  }
+}
+
+/* ═══════════════════════════════════════════════════════
+   USER PORTAL
+═══════════════════════════════════════════════════════ */
+function uShowPage(id){
+  document.getElementById("pg-user").querySelectorAll(".subpage").forEach(p=>p.classList.remove("active"));
+  document.getElementById(id).classList.add("active");window.scrollTo(0,0);
+  if(id==="u-pg-dash"||id==="u-pg-create"||id==="u-pg-kb")hideFloatBtn();
+}
+function uMyTickets(){return tickets.filter(t=>t.reporter===currentUser.name&&t.status!=="res");}
+function uHistoryTickets(){return tickets.filter(t=>t.reporter===currentUser.name&&t.status==="res");}
+function uRenderAll(){uRenderMetrics();uRenderTickets();uRenderKB();}
+function uRenderMetrics(){
+  const mine=tickets.filter(t=>t.reporter===currentUser.name);
+  document.getElementById("u-m-open").textContent=mine.filter(t=>t.status==="open").length;
+  document.getElementById("u-m-prog").textContent=mine.filter(t=>t.status==="prog"||t.status==="esc").length;
+  document.getElementById("u-m-res").textContent=mine.filter(t=>t.status==="res").length;
+}
+function uRenderTickets(){
+  const filts=["all","P1","P2","P3","P4"];
+  document.getElementById("u-filters").innerHTML=filts.map(f=>`<button class="fbtn${f===uActiveFilter?" active":""}" onclick="uSetFilter('${f}')">${f==="all"?"All":f}</button>`).join("");
+  const active=uMyTickets().filter(t=>uActiveFilter==="all"||t.prio===uActiveFilter).sort((a,b)=>({P1:0,P2:1,P3:2,P4:3}[a.prio]-{P1:0,P2:1,P3:2,P4:3}[b.prio]));
+  document.getElementById("u-ticket-list").innerHTML=active.length?active.map(t=>`
+    <div class="tkt" onclick="uOpenTicket('${t.id}')">
+      <div class="tkt-top"><span class="tkt-id">${t.id}</span><span class="prio ${t.prio.toLowerCase()}">${t.prio}</span></div>
+      <div class="tkt-desc">${t.desc}</div>
+      <div class="tkt-meta"><span class="tkt-cat">${t.cat}</span><span class="spill s-${t.status}">${STATUS_TXT[t.status]}</span></div>
+    </div>`).join(""):`<div class="empty-state">No open tickets — you're all set!</div>`;
+  const hist=uHistoryTickets();
+  document.getElementById("u-history-list").innerHTML=hist.length?hist.map(t=>`
+    <div class="tkt" onclick="uOpenTicket('${t.id}')">
+      <div class="tkt-top"><span class="tkt-id">${t.id}</span><span class="prio ${t.prio.toLowerCase()}">${t.prio}</span></div>
+      <div class="tkt-desc">${t.desc}</div>
+      <div class="tkt-meta"><span class="tkt-cat">${t.cat}</span><span class="spill s-res">Resolved</span></div>
+    </div>`).join(""):`<div class="empty-state">No resolved tickets yet</div>`;
+}
+function uSetFilter(f){uActiveFilter=f;uRenderTickets();}
+function uRenderKB(){
+  document.getElementById("u-kb-grid").innerHTML=KB_ARTICLES.map(a=>`
+    <div class="kb-card" onclick="uOpenKB('${a.id}')">
+      <div class="kb-tag">${a.cat.split(" & ")[0]}</div>
+      <div class="kb-card-title">${a.title}</div>
+      <div class="kb-card-sub">${a.sub}</div>
+    </div>`).join("");
+}
+function uOpenKB(id){
+  const a=KB_ARTICLES.find(x=>x.id===id);if(!a)return;
+  document.getElementById("kb-title-h").textContent=a.title;
+  document.getElementById("kb-cat-h").textContent=a.cat;
+  document.getElementById("kb-body").innerHTML=a.body;
+  uShowPage("u-pg-kb");
+}
+function uOpenTicket(id){
+  uCurrentId=id;const t=tickets.find(x=>x.id===id);if(!t)return;
+  document.getElementById("ud-id").textContent=t.id;
+  document.getElementById("ud-cat").textContent=t.cat;
+  document.getElementById("ud-desc").textContent=t.desc;
+  document.getElementById("ud-prio").innerHTML=`<span class="prio ${t.prio.toLowerCase()}">${t.prio}</span>`;
+  document.getElementById("ud-spill").className="spill s-"+t.status;document.getElementById("ud-spill").textContent=STATUS_TXT[t.status];
+  document.getElementById("ud-time").textContent=new Date(t.ts).toLocaleString();
+  document.getElementById("ud-cat2").textContent=t.cat;
+  document.getElementById("ud-prio2").innerHTML=`<span class="prio ${t.prio.toLowerCase()}">${t.prio}</span>`;
+  document.getElementById("ud-agent").textContent=t.agent||"Not yet assigned";
+  document.getElementById("ud-eta").textContent=ETA[t.prio];
+  document.getElementById("ud-notes").textContent=t.notes||"No notes yet.";
+  const steps=["Open","In progress","Resolved"];
+  const curIdx=t.status==="esc"?1:t.status==="res"?2:t.status==="prog"?1:0;
+  document.getElementById("ud-timeline").innerHTML=steps.map((s,i)=>`
+    <div class="tl-item">
+      <div class="tl-dot${i<curIdx?" done":i===curIdx?" active":""}"></div>
+      <div class="tl-line"></div>
+      <div><div class="tl-label">${s}</div><div class="tl-sub">${i<curIdx?"Completed":i===curIdx?"Current stage":"Pending"}</div></div>
+    </div>`).join("");
+  const fbCard=document.getElementById("ud-feedback-card");
+  fbCard.style.display=t.status==="res"&&!t.feedback?"block":"none";
+  if(t.status==="res"&&!t.feedback)renderStars(0);
+  uShowPage("u-pg-detail");
+  // chat hooks
+  floatTicketId=id;
+  const fts=document.getElementById("float-ticket-title");
+  const fsb=document.getElementById("float-ticket-sub");
+  if(fts)fts.textContent=id;
+  if(fsb)fsb.textContent=t.desc.slice(0,35)+(t.desc.length>35?"…":"");
+  markUserRead(id);
+  lcRenderMsgs("ud-lc-msgs",id,"user");
+  lcRenderMsgs("float-msgs",id,"user");
+  updateFloatNotif();
+  showFloatBtn();
+}
+let uStarRating=0;
+function renderStars(n){
+  uStarRating=n;
+  document.getElementById("ud-stars").innerHTML=[1,2,3,4,5].map(i=>`<span class="star${i<=n?" lit":""}" onclick="renderStars(${i})" onmouseover="hoverStars(${i})" onmouseout="renderStars(${uStarRating})">&starf;</span>`).join("");
+}
+function hoverStars(n){document.querySelectorAll("#ud-stars .star").forEach((s,i)=>{s.classList.toggle("lit",i<n);});}
+function uSubmitFeedback(){
+  const t=tickets.find(x=>x.id===uCurrentId);if(!t)return;
+  t.feedback={rating:uStarRating,note:document.getElementById("ud-fb-notes").value};
+  document.getElementById("ud-feedback-card").style.display="none";
+  const m=document.getElementById("ud-fb-msg");m.textContent="Thank you for your feedback!";setTimeout(()=>m.textContent="",3000);
+}
+function uUpdateSubcat(){
+  const cat=document.getElementById("uf-cat").value;
+  const sel=document.getElementById("uf-subcat");
+  sel.innerHTML=`<option value="">Select…</option>`+(SUBCATS[cat]||[]).map(s=>`<option>${s}</option>`).join("");
+}
+function uClearForm(){
+  ["uf-desc","uf-cat","uf-subcat","uf-prio","uf-device","uf-notes"].forEach(id=>{const el=document.getElementById(id);if(el)el.value="";});
+  document.getElementById("uf-desc-c").textContent="0";document.getElementById("uf-notes-c").textContent="0";
+  ["uv-desc","uv-cat","uv-prio","uf-msg"].forEach(id=>document.getElementById(id).textContent="");
+  uUpdateSubcat();
+}
+function uSubmitTicket(){
+  const desc=document.getElementById("uf-desc").value.trim();
+  const cat=document.getElementById("uf-cat").value;
+  const prio=document.getElementById("uf-prio").value;
+  document.getElementById("uv-desc").textContent=!desc?"Required":"";
+  document.getElementById("uv-cat").textContent=!cat?"Required":"";
+  document.getElementById("uv-prio").textContent=!prio?"Required":"";
+  if(!desc||!cat||!prio)return;
+  const t=mkTicket({cat,desc,prio,status:"open",subcat:document.getElementById("uf-subcat").value||"",reporter:currentUser.name,dept:currentUser.dept,notes:document.getElementById("uf-notes").value});
+  tickets.unshift(t);uRenderAll();
+  const m=document.getElementById("uf-msg");m.textContent=`Ticket ${t.id} submitted!`;
+  setTimeout(()=>{uClearForm();uShowPage("u-pg-dash");m.textContent="";},1200);
+}
+
+/* ═══════════════════════════════════════════════════════
+   ADMIN PORTAL
+═══════════════════════════════════════════════════════ */
+function aShowPage(id){
+  document.getElementById("pg-admin").querySelectorAll(".subpage").forEach(p=>p.classList.remove("active"));
+  document.getElementById(id).classList.add("active");window.scrollTo(0,0);
+  if(id==="a-pg-inbox")renderInboxList();
+}
+function aRenderAll(){aRenderMetrics();aRenderTickets();aRenderCats();}
+function aRenderMetrics(){
+  const c={open:0,prog:0,esc:0,res:0};tickets.forEach(t=>c[t.status]=(c[t.status]||0)+1);
+  document.getElementById("a-m-open").textContent=c.open;document.getElementById("a-m-prog").textContent=c.prog;
+  document.getElementById("a-m-esc").textContent=c.esc;document.getElementById("a-m-res").textContent=c.res;
+  document.getElementById("a-m-esc-sub").textContent=c.esc>0?"needs attention":"all clear";
+}
+function aRenderTickets(){
+  const pOrd={P1:0,P2:1,P3:2,P4:3};
+  document.getElementById("a-filters").innerHTML=["all","P1","P2","P3","P4"].map(f=>`<button class="fbtn${f===aActiveFilter?" active":""}" onclick="aSetFilter('${f}')">${f==="all"?"All":f}</button>`).join("");
+  const q=(document.getElementById("a-search").value||"").toLowerCase();
+  const catF=document.getElementById("a-cat-filter").value;
+  const vis=tickets.filter(t=>{
+    if(t.status==="res")return false;
+    if(aActiveFilter!=="all"&&t.prio!==aActiveFilter)return false;
+    if(catF&&t.cat!==catF)return false;
+    if(q&&!t.desc.toLowerCase().includes(q)&&!t.id.toLowerCase().includes(q)&&!t.reporter.toLowerCase().includes(q)&&!t.cat.toLowerCase().includes(q))return false;
+    return true;
+  }).sort((a,b)=>pOrd[a.prio]-pOrd[b.prio]);
+  document.getElementById("a-tkt-label").textContent=`All tickets${q||catF?" (filtered: "+vis.length+")":""}`;
+  document.getElementById("a-ticket-list").innerHTML=vis.length?vis.map(t=>`
+    <div class="tkt" data-id="${t.id}" onclick="aOpenTicket('${t.id}')">
+      <div class="tkt-top"><span class="tkt-id">${t.id}</span><span class="prio ${t.prio.toLowerCase()}">${t.prio}</span></div>
+      <div class="tkt-desc">${aHighlight(t.desc,q)}</div>
+      <div class="tkt-meta"><span class="tkt-cat">${t.cat} · <span style="color:var(--t2)">${t.reporter}</span></span><span class="spill s-${t.status}">${STATUS_TXT[t.status]}</span></div>
+    </div>`).join(""):`<div class="empty-state">No tickets match</div>`;
+}
+function aHighlight(text,q){
+  if(!q)return text;
+  return text.replace(new RegExp(`(${q.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")})`,"gi"),`<mark style="background:var(--bgw);color:var(--tw);border-radius:2px;padding:0 1px">$1</mark>`);
+}
+function aRenderCats(){
+  const counts={};CATS.forEach(c=>counts[c.name]=0);
+  tickets.filter(t=>t.status!=="res").forEach(t=>{if(counts[t.cat]!==undefined)counts[t.cat]++;});
+  const max=Math.max(...Object.values(counts),1);
+  document.getElementById("a-cat-list").innerHTML=CATS.map(c=>`
+    <div class="cat-row">
+      <div class="cat-top"><span class="cat-name"><span class="dot" style="background:${c.color}"></span>${c.name}</span><span style="font-size:11px;color:var(--t1)">${counts[c.name]}</span></div>
+      <div class="bar-bg"><div class="bar-fill" style="width:${Math.round(counts[c.name]/max*100)}%;background:${c.color}"></div></div>
+    </div>`).join("");
+}
+function aSetFilter(f){aActiveFilter=f;aRenderTickets();}
+function aAddFeed(desc,cat,type){
+  const box=document.getElementById("a-feed-box");if(!box)return;
+  const div=document.createElement("div");
+  div.className="feed-item"+(type==="esc"?" f-esc":type==="res"?" f-res":type==="freeze"?" f-freeze":"");
+  const hm=new Date().toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"});
+  const lbl=type==="esc"?"Escalated":type==="res"?"Resolved":type==="freeze"?"System":"New";
+  div.textContent=`${hm} — ${lbl}: ${desc}`;
+  box.prepend(div);while(box.children.length>14)box.removeChild(box.lastChild);
+}
+function aOpenTicket(id){
+  aCurrentId=id;const t=tickets.find(x=>x.id===id);if(!t)return;
+  document.getElementById("ad-id").textContent=t.id;document.getElementById("ad-cat").textContent=t.cat;
+  document.getElementById("ad-desc").textContent=t.desc;
+  document.getElementById("ad-prio").innerHTML=`<span class="prio ${t.prio.toLowerCase()}">${t.prio}</span>`;
+  const sp=document.getElementById("ad-spill");sp.className="spill s-"+t.status;sp.textContent=STATUS_TXT[t.status];
+  document.getElementById("ad-time").textContent=new Date(t.ts).toLocaleString();
+  document.getElementById("ad-reporter").textContent=`Reporter: ${t.reporter}`;
+  document.getElementById("ad-dept").textContent=`Dept: ${t.dept||"—"}`;
+  document.getElementById("ad-agent").value=t.agent||"";document.getElementById("ad-status").value=t.status;
+  document.getElementById("ad-notes").value=t.notes||"";document.getElementById("ad-save-msg").textContent="";
+  document.getElementById("ad-esc-btn").style.display=t.status==="esc"?"none":"flex";
+  const userTickets=tickets.filter(x=>x.reporter===t.reporter);
+  document.getElementById("ad-uname").textContent=t.reporter;
+  document.getElementById("ad-udept").textContent=t.dept||"—";
+  document.getElementById("ad-uopen").textContent=userTickets.filter(x=>x.status!=="res").length;
+  document.getElementById("ad-utotal").textContent=userTickets.length;
+  // Set reporter name label
+  const rn=document.getElementById('ad-chat-reporter-name');
+  if(rn)rn.textContent=t.reporter;
+  aShowPage("a-pg-detail");
+  renderTips(t.cat, t.subcat||'');
+
+  // chat hooks
+  markAdminRead(id);
+  lcRenderMsgs("ad-lc-msgs",id,"admin");
+  updateInboxBadge();
+  renderInboxList();
+}
+function aSyncPill(){
+  if(!aCurrentId)return;
+  const v=document.getElementById("ad-status").value;
+  const sp=document.getElementById("ad-spill");sp.className="spill s-"+v;sp.textContent=STATUS_TXT[v];
+}
+function aSaveTicket(){
+  if(!aCurrentId)return;const idx=tickets.findIndex(t=>t.id===aCurrentId);if(idx===-1)return;
+  tickets[idx].agent=document.getElementById("ad-agent").value;
+  tickets[idx].status=document.getElementById("ad-status").value;
+  tickets[idx].notes=document.getElementById("ad-notes").value;
+  aSyncPill();document.getElementById("ad-esc-btn").style.display=tickets[idx].status==="esc"?"none":"flex";
+  aRenderAll();uRenderAll();
+  if(tickets[idx].status==="res")aAddFeed(tickets[idx].desc,tickets[idx].cat,"res");
+  const m=document.getElementById("ad-save-msg");m.textContent="Saved";setTimeout(()=>m.textContent="",2000);
+}
+function aEscalate(){
+  if(!aCurrentId)return;const idx=tickets.findIndex(t=>t.id===aCurrentId);if(idx===-1)return;
+  tickets[idx].status="esc";document.getElementById("ad-status").value="esc";aSyncPill();
+  document.getElementById("ad-esc-btn").style.display="none";aRenderAll();uRenderAll();
+  aAddFeed(tickets[idx].desc,tickets[idx].cat,"esc");
+  const m=document.getElementById("ad-save-msg");m.textContent="Escalated";setTimeout(()=>m.textContent="",2000);
+}
+function refreshEscList(){
+  const esc=tickets.filter(t=>t.status==="esc");
+  document.getElementById("chat-esc-list").innerHTML=esc.length?esc.map(t=>`
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:6px 0;border-bottom:0.5px solid var(--b)">
+      <div><div style="font-size:12px;font-weight:500;color:var(--t0)">${t.id}</div><div style="font-size:11px;color:var(--t1)">${t.desc.slice(0,38)}${t.desc.length>38?"…":""}</div></div>
+      <span class="prio ${t.prio.toLowerCase()}">${t.prio}</span>
+    </div>`).join(""):`<div style="font-size:12px;color:var(--t1);padding:6px 0">No escalated tickets</div>`;
+}
+
+
+
+/* ═══════════════════════════════════════════════════════
+   ADMIN DETAIL — TABS & PER-TICKET AI ASSISTANT
+═══════════════════════════════════════════════════════ */
+
+
+
+
+
+
+
+
+
+
+
+/* ═══════════════════════════════════════════════════════
+   CHATBOT (standalone AI page)
+═══════════════════════════════════════════════════════ */
+
+
+
+
+
+
+
+
+
+/* ═══════════════════════════════════════════════════════
+   LIVE CHAT SYSTEM
+   - chatStore: {ticketId: {messages:[], adminTyping, userTyping, adminUnread, userUnread}}
+   - messages: {id, sender:'admin'|'user', name, text, ts, read}
+═══════════════════════════════════════════════════════ */
+const chatStore = {};
+let activeInboxTicketId = null;
+let floatTicketId = null;
+let userTypingTimer = null;
+let adminTypingTimer = null;
+
+function getChat(ticketId) {
+  if (!chatStore[ticketId]) chatStore[ticketId] = { messages:[], adminTyping:false, userTyping:false, adminUnread:0, userUnread:0 };
+  return chatStore[ticketId];
+}
+
+function lcTs() {
+  return new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+}
+
+function lcMsgHTML(msg, perspective) {
+  // perspective: 'admin' = admin viewing, 'user' = user viewing
+  const isAdmin = msg.sender === 'admin';
+  const cls = isAdmin ? 'admin' : 'user-msg';
+  const align = (perspective === 'admin' && isAdmin) || (perspective === 'user' && !isAdmin) ? 'admin' : 'user-msg';
+  const readTick = isAdmin && perspective === 'admin' ? `<div class="lc-read">${msg.read ? '✓✓ Read' : '✓ Sent'}</div>` : '';
+  const senderLabel = (perspective === 'admin' && !isAdmin) || (perspective === 'user' && isAdmin)
+    ? `<div class="lc-sender">${msg.name}</div>` : '';
+  return `<div style="display:flex;flex-direction:column;align-items:${align==='admin'?'flex-end':'flex-start'}">
+    ${senderLabel}
+    <div class="lc-bubble ${align}">
+      <div>${msg.text}</div>
+      <span class="lc-ts">${msg.ts}</span>
+      ${readTick}
+    </div>
+  </div>`;
+}
+
+function lcRenderMsgs(containerId, ticketId, perspective) {
+  const el = document.getElementById(containerId);
+  if (!el) return;
+  const chat = getChat(ticketId);
+  if (!chat.messages.length) {
+    el.innerHTML = `<div class="lc-empty">No messages yet — start the conversation</div>`;
+  } else {
+    el.innerHTML = chat.messages.map(m => lcMsgHTML(m, perspective)).join('');
+  }
+  el.scrollTop = el.scrollHeight;
+}
+
+function lcTypingHTML(name) {
+  return `<span style="font-size:11px;color:var(--t2)">${name} is typing</span>
+    <div class="lc-tdots"><div class="lc-tdot"></div><div class="lc-tdot"></div><div class="lc-tdot"></div></div>`;
+}
+
+/* ── ADMIN sends from ticket detail ── */
+function lcAdminSend() {
+  if(!aCurrentId){return;}
+  const inp = document.getElementById('ad-lc-input');
+  const text = inp.value.trim();
+  if (!text) return;
+  inp.value = '';
+  const chat = getChat(aCurrentId);
+  const msg = { id: Date.now(), sender:'admin', name: currentUser.name, text, ts: lcTs(), read: false };
+  chat.messages.push(msg);
+  chat.adminTyping = false;
+  chat.userUnread++;
+  lcRenderMsgs('ad-lc-msgs', aCurrentId, 'admin');
+  lcRenderMsgs('ud-lc-msgs', aCurrentId, 'user');
+  lcRenderMsgs('float-msgs', aCurrentId, 'user');
+  lcRenderMsgs('inbox-lc-msgs', aCurrentId, 'admin');
+  updateFloatNotif();
+  updateInboxBadge();
+  renderInboxList();
+}
+function lcAdminKeydown(e) {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); lcAdminSend(); }
+  else { triggerAdminTyping(); }
+}
+function triggerAdminTyping() {
+  if (!aCurrentId) return;
+  const chat = getChat(aCurrentId);
+  chat.adminTyping = true;
+  renderTypingIndicators(aCurrentId);
+  clearTimeout(adminTypingTimer);
+  adminTypingTimer = setTimeout(() => {
+    chat.adminTyping = false;
+    renderTypingIndicators(aCurrentId);
+  }, 2000);
+}
+
+/* ── ADMIN sends from inbox ── */
+function lcInboxSend() {
+  const inp = document.getElementById('inbox-lc-input');
+  const text = inp.value.trim();
+  if (!text || !activeInboxTicketId) return;
+  inp.value = '';
+  const chat = getChat(activeInboxTicketId);
+  const msg = { id: Date.now(), sender:'admin', name: currentUser.name, text, ts: lcTs(), read: false };
+  chat.messages.push(msg);
+  chat.adminTyping = false;
+  chat.userUnread++;
+  lcRenderMsgs('inbox-lc-msgs', activeInboxTicketId, 'admin');
+  lcRenderMsgs('ad-lc-msgs', activeInboxTicketId, 'admin');
+  lcRenderMsgs('ud-lc-msgs', activeInboxTicketId, 'user');
+  lcRenderMsgs('float-msgs', activeInboxTicketId, 'user');
+  updateFloatNotif();
+  updateInboxBadge();
+  renderInboxList();
+}
+function lcInboxKeydown(e) {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); lcInboxSend(); }
+}
+
+/* ── USER sends from ticket detail ── */
+function lcUserSend() {
+  const inp = document.getElementById('ud-lc-input');
+  const text = inp.value.trim();
+  if (!text || !uCurrentId) return;
+  inp.value = '';
+  lcPostUserMsg(uCurrentId, text);
+}
+function lcUserKeydown(e) {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); lcUserSend(); }
+  else { triggerUserTyping(uCurrentId); }
+}
+
+/* ── USER sends from float panel ── */
+function lcFloatSend() {
+  const inp = document.getElementById('float-input');
+  const text = inp.value.trim();
+  if (!text || !floatTicketId) return;
+  inp.value = '';
+  lcPostUserMsg(floatTicketId, text);
+}
+
+function lcPostUserMsg(ticketId, text) {
+  const chat = getChat(ticketId);
+  const msg = { id: Date.now(), sender:'user', name: currentUser.name, text, ts: lcTs(), read: false };
+  chat.messages.push(msg);
+  chat.userTyping = false;
+  chat.adminUnread++;
+  lcRenderMsgs('ud-lc-msgs', ticketId, 'user');
+  lcRenderMsgs('float-msgs', ticketId, 'user');
+  lcRenderMsgs('ad-lc-msgs', ticketId, 'admin');
+  lcRenderMsgs('inbox-lc-msgs', ticketId, 'admin');
+  renderTypingIndicators(ticketId);
+  updateInboxBadge();
+  renderInboxList();
+}
+
+function triggerUserTyping(ticketId) {
+  if (!ticketId) return;
+  const chat = getChat(ticketId);
+  chat.userTyping = true;
+  renderTypingIndicators(ticketId);
+  clearTimeout(userTypingTimer);
+  userTypingTimer = setTimeout(() => {
+    chat.userTyping = false;
+    renderTypingIndicators(ticketId);
+  }, 2000);
+}
+
+function renderTypingIndicators(ticketId) {
+  const chat = getChat(ticketId);
+  const adEl = document.getElementById('ad-lc-typing');
+  if (adEl) adEl.innerHTML = chat.userTyping ? lcTypingHTML(tickets.find(t=>t.id===ticketId)?.reporter || 'User') : '';
+  const udEl = document.getElementById('ud-lc-typing');
+  if (udEl) udEl.innerHTML = chat.adminTyping ? lcTypingHTML('IT Support') : '';
+  const inEl = document.getElementById('inbox-lc-typing');
+  if (inEl && activeInboxTicketId===ticketId) inEl.innerHTML = chat.userTyping ? lcTypingHTML(tickets.find(t=>t.id===ticketId)?.reporter || 'User') : '';
+  const flEl = document.getElementById('float-typing');
+  if (flEl && floatTicketId===ticketId) flEl.innerHTML = chat.adminTyping ? lcTypingHTML('IT Support') : '';
+}
+
+/* ── MARK READ ── */
+function markAdminRead(ticketId) {
+  const chat = getChat(ticketId);
+  chat.messages.forEach(m => { if (m.sender === 'user') m.read = true; });
+  chat.adminUnread = 0;
+  lcRenderMsgs('ad-lc-msgs', ticketId, 'admin');
+  lcRenderMsgs('inbox-lc-msgs', ticketId, 'admin');
+  updateInboxBadge();
+  renderInboxList();
+}
+function markUserRead(ticketId) {
+  const chat = getChat(ticketId);
+  chat.messages.forEach(m => { if (m.sender === 'admin') m.read = true; });
+  chat.userUnread = 0;
+  lcRenderMsgs('ud-lc-msgs', ticketId, 'user');
+  lcRenderMsgs('float-msgs', ticketId, 'user');
+  lcRenderMsgs('ad-lc-msgs', ticketId, 'admin');
+  updateFloatNotif();
+}
+
+/* ── RESOLVE FROM CHAT ── */
+function aResolveFromChat() {
+  if (!aCurrentId) return;
+  const idx = tickets.findIndex(t => t.id === aCurrentId);
+  if (idx === -1) return;
+  tickets[idx].status = 'res';
+  document.getElementById('ad-status').value = 'res';
+  aSyncPill(); aRenderAll(); uRenderAll();
+  aAddFeed(tickets[idx].desc, tickets[idx].cat, 'res');
+  const chat = getChat(aCurrentId);
+  chat.messages.push({ id: Date.now(), sender:'admin', name:'System', text:'✓ This ticket has been marked as resolved. Thank you for contacting IT support!', ts: lcTs(), read: false });
+  chat.userUnread++;
+  lcRenderMsgs('ad-lc-msgs', aCurrentId, 'admin');
+  lcRenderMsgs('ud-lc-msgs', aCurrentId, 'user');
+  lcRenderMsgs('float-msgs', aCurrentId, 'user');
+  updateFloatNotif();
+  const m = document.getElementById('ad-save-msg');
+  m.textContent = 'Ticket resolved'; setTimeout(() => m.textContent = '', 2000);
+}
+function aResolveFromInbox() {
+  if (!activeInboxTicketId) return;
+  const idx = tickets.findIndex(t => t.id === activeInboxTicketId);
+  if (idx === -1) return;
+  tickets[idx].status = 'res';
+  aRenderAll(); uRenderAll();
+  aAddFeed(tickets[idx].desc, tickets[idx].cat, 'res');
+  const chat = getChat(activeInboxTicketId);
+  chat.messages.push({ id: Date.now(), sender:'admin', name:'System', text:'✓ This ticket has been marked as resolved. Thank you for contacting IT support!', ts: lcTs(), read: false });
+  chat.userUnread++;
+  lcRenderMsgs('inbox-lc-msgs', activeInboxTicketId, 'admin');
+  lcRenderMsgs('ud-lc-msgs', activeInboxTicketId, 'user');
+  lcRenderMsgs('float-msgs', activeInboxTicketId, 'user');
+  updateFloatNotif();
+  renderInboxList();
+}
+
+/* ── INBOX ── */
+function renderInboxList() {
+  const ticketsWithChat = tickets.filter(t => chatStore[t.id] && chatStore[t.id].messages.length > 0);
+  const el = document.getElementById('inbox-list');
+  if (!el) return;
+  if (!ticketsWithChat.length) {
+    el.innerHTML = `<div class="empty-state">No active conversations</div>`;
+    document.getElementById('inbox-unread-count').textContent = '';
+    return;
+  }
+  const totalUnread = ticketsWithChat.reduce((s, t) => s + (chatStore[t.id]?.adminUnread || 0), 0);
+  document.getElementById('inbox-unread-count').textContent = totalUnread > 0 ? `${totalUnread} unread` : '';
+  el.innerHTML = ticketsWithChat.map(t => {
+    const chat = getChat(t.id);
+    const last = chat.messages[chat.messages.length - 1];
+    const unread = chat.adminUnread > 0;
+    const ini = t.reporter.split(' ').map(w => w[0]).join('').toUpperCase().slice(0,2);
+    return `<div class="inbox-row${unread?' unread':''}" onclick="openInboxChat('${t.id}')">
+      <div class="inbox-av">${ini}</div>
+      <div class="inbox-meta">
+        <div class="inbox-name">${t.reporter} <span style="font-size:10px;color:var(--t2);font-weight:400">${t.id}</span></div>
+        <div class="inbox-preview">${last ? last.text : ''}</div>
+      </div>
+      <div class="inbox-right">
+        <div class="inbox-time">${last ? last.ts : ''}</div>
+        ${unread ? '<div class="inbox-dot"></div>' : ''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function openInboxChat(ticketId) {
+  activeInboxTicketId = ticketId;
+  const t = tickets.find(x => x.id === ticketId);
+  document.getElementById('inbox-empty').style.display = 'none';
+  document.getElementById('inbox-chat-active').style.display = 'flex';
+  document.getElementById('inbox-chat-name').textContent = t ? t.reporter : ticketId;
+  document.getElementById('inbox-chat-ticket').textContent = t ? `${t.id} — ${t.desc.slice(0,40)}` : '';
+  document.getElementById('inbox-resolve-btn').style.display = t && t.status === 'res' ? 'none' : 'flex';
+  markAdminRead(ticketId);
+  lcRenderMsgs('inbox-lc-msgs', ticketId, 'admin');
+}
+
+function updateInboxBadge() {
+  const total = Object.values(chatStore).reduce((s, c) => s + c.adminUnread, 0);
+  const badge = document.getElementById('a-inbox-badge');
+  if (!badge) return;
+  if (total > 0) { badge.style.display = 'inline'; badge.textContent = total; }
+  else badge.style.display = 'none';
+}
+
+/* ── FLOAT PANEL (user) ── */
+function toggleFloatPanel() {
+  const panel = document.getElementById('float-panel');
+  const isOpen = panel.classList.toggle('open');
+  if (isOpen && floatTicketId) {
+    markUserRead(floatTicketId);
+    lcRenderMsgs('float-msgs', floatTicketId, 'user');
+  }
+}
+function updateFloatNotif() {
+  const total = Object.values(chatStore).reduce((s, c) => s + c.userUnread, 0);
+  const notif = document.getElementById('float-notif');
+  if (!notif) return;
+  if (total > 0) { notif.classList.add('on'); notif.textContent = total; }
+  else notif.classList.remove('on');
+}
+function showFloatBtn() {
+  const btn = document.getElementById('float-chat-btn');
+  if (btn) btn.classList.add('visible');
+}
+function hideFloatBtn() {
+  const btn = document.getElementById('float-chat-btn');
+  if (btn) btn.classList.remove('visible');
+  const panel = document.getElementById('float-panel');
+  if (panel) panel.classList.remove('open');
+}
+
+/* ── OPEN TICKET WITH CHAT CONTEXT ── */
+/* chat hooks merged directly into original functions */
+
+/* ═══════════════════════════════════════════════════════
+   BOOT
+═══════════════════════════════════════════════════════ */
+seed();
+</script>
+</body>
+</html>
